@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name" translatable="false">SacaLaCuenta</string>
+    <string name="cuenta" translatable="true">Receipt</string>
+    <string name="historial" translatable="true">History</string>
+    <string name="name_database_room" translatable="false">database_cuenta</string>
+    <string name="name_datastore_preferences" translatable="false">datastore_preferences</string>
+    <string name="sub_title" translatable="true">Wellcome, %1$s .</string>
+    <string name="sub_title_with_out" translatable="true">Wellcome.</string>
+    <string name="label_title_cuenta" translatable="true">Title</string>
+    <string name="label_title_producto" translatable="true">Product</string>
+    <string name="label_title_cantidad">Quantity</string>
+    <string name="label_title_precio">Price</string>
+    <string name="label_title_total">Total</string>
+    <string name="text_number_detalle_cuenta" translatable="false">%1$02d.</string>
+    <string name="label_title_metodo_pago" translatable="true">Payment Method</string>
+    <string name="text_total_cuenta" translatable="false">Total: %1$.2f</string>
+    <string name="save" translatable="true">Save</string>
+</resources>

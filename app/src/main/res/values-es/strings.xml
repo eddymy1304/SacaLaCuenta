@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cuenta" translatable="true">Cuenta</string>
+    <string name="historial" translatable="true">Historial</string>
+    <string name="sub_title" translatable="true">Bienvenido, %1$s .</string>
+    <string name="sub_title_with_out" translatable="true">Bienvenido.</string>
+    <string name="label_title_cuenta" translatable="true">Titulo</string>
+    <string name="label_title_producto" translatable="true">Producto</string>
+    <string name="label_title_cantidad" translatable="true">Cantidad</string>
+    <string name="label_title_precio" translatable="true">Precio</string>
+    <string name="label_title_total" translatable="true">Total</string>
+    <string name="label_title_metodo_pago" translatable="true">Método de pago</string>
+    <string name="save" translatable="true">Guardar</string>
+</resources>
