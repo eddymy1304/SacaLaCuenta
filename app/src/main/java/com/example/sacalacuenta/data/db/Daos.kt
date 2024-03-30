@@ -26,7 +26,11 @@ interface Daos {
 
     @Transaction
     @Query("SELECT * FROM CuentaEntity")
-    fun getCuentasWithDetalles(): Flow<List<CuentWithDetalleCuenta>>
+    fun getCuentasWithDetalles(): Flow<List<CuentaWithDetalleCuenta>>
+
+    @Transaction
+    @Query("SELECT * FROM CuentaEntity ORDER BY id DESC LIMIT 1")
+    fun getLastCuentaWithDetalles(): Flow<CuentaWithDetalleCuenta>
 
     @Insert
     suspend fun insertDetalleCuentas(listDetalleCuenta: List<DetalleCuentaEntity>)

@@ -10,7 +10,6 @@ import androidx.room.Relation
 data class CuentaEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "title") val title: String? = null,
-    @ColumnInfo(name = "registration_date") val regDate: String? = null,
     @ColumnInfo(name = "total") val total: Double? = null,
     @ColumnInfo(name = "number_items") val numberItems: Int? = null,
     @ColumnInfo(name = "payment_method") val paymentMethod: String? = null,
@@ -28,7 +27,7 @@ data class DetalleCuentaEntity(
     @ColumnInfo(name = "total") val total: Double? = null
 )
 
-data class CuentWithDetalleCuenta(
+data class CuentaWithDetalleCuenta(
     @Embedded val cuenta: CuentaEntity,
     @Relation(
         parentColumn = "id",

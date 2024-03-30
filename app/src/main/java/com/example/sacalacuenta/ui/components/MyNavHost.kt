@@ -9,6 +9,7 @@ import com.example.sacalacuenta.MainViewModel
 import com.example.sacalacuenta.data.models.Screen
 import com.example.sacalacuenta.ui.screens.CuentaScreen
 import com.example.sacalacuenta.ui.screens.HistorialScreen
+import com.example.sacalacuenta.ui.screens.TicketScreen
 
 @Composable
 fun MyNavHost(
@@ -31,6 +32,13 @@ fun MyNavHost(
 
         composable(Screen.HistorialScreen.route) {
             HistorialScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
+
+        composable(Screen.TicketScreen.route) {
+            TicketScreen(
                 navController = navController,
                 viewModel = viewModel
             )

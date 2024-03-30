@@ -13,7 +13,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.sacalacuenta.MainViewModel
 import com.example.sacalacuenta.R
-import com.example.sacalacuenta.data.models.Screen
 import com.example.sacalacuenta.data.models.Screen.CuentaScreen
 import com.example.sacalacuenta.data.models.getListItemsBottomNav
 import com.example.sacalacuenta.ui.components.MyBottomBar
@@ -24,7 +23,7 @@ import com.example.sacalacuenta.ui.theme.SacaLaCuentaTheme
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel = hiltViewModel(),
+    viewModel: MainViewModel,
     finished: () -> Unit
 ) {
 
@@ -37,7 +36,10 @@ fun MainScreen(
         topBar = {
             MyTopBar(
                 title = stringResource(id = R.string.app_name),
-                subTitle = if (nameUser.isNotBlank()) stringResource(id = R.string.sub_title, nameUser)
+                subTitle = if (nameUser.isNotBlank()) stringResource(
+                    id = R.string.sub_title,
+                    nameUser
+                )
                 else stringResource(id = R.string.sub_title_with_out),
                 showIconNav = navController.currentDestination?.route != CuentaScreen.route
             ) {
@@ -56,7 +58,9 @@ fun MainScreen(
         }
     ) {
         MyNavHost(
-            modifier = Modifier.fillMaxSize().padding(it),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
             viewModel = viewModel,
             navController = navController,
             startDestination = CuentaScreen.route
@@ -68,8 +72,10 @@ fun MainScreen(
 @Composable
 fun PreviewMainScreen() {
     SacaLaCuentaTheme {
-        MainScreen(modifier = Modifier.fillMaxSize()) {
-
-        }
+        MainScreen(
+            modifier = Modifier.fillMaxSize(),
+            viewModel = hiltViewModel(),
+            finished = {}
+        )
     }
 }

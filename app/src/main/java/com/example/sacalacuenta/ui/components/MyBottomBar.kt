@@ -1,6 +1,5 @@
 package com.example.sacalacuenta.ui.components
 
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -22,7 +21,7 @@ import com.example.sacalacuenta.ui.theme.SacaLaCuentaTheme
 @Composable
 fun MyBottomBar(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController,
     items: List<Screen>
 ) {
     NavigationBar(modifier = modifier) {
@@ -67,6 +66,6 @@ fun MyBottomBar(
 @Composable
 fun PreviewMyBottomBar() {
     SacaLaCuentaTheme {
-        MyBottomBar(items = getListItemsBottomNav())
+        MyBottomBar(items = getListItemsBottomNav(), navController = rememberNavController())
     }
 }

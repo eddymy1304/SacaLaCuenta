@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "da509879566d6d27b6741d756a30c912",
+    "identityHash": "baae90c7c0123f4fca305b6826882c14",
     "entities": [
       {
         "tableName": "CuentaEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `registration_date` TEXT, `total` REAL, `number_items` INTEGER, `payment_method` TEXT, `date` TEXT, `date_time` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `total` REAL, `number_items` INTEGER, `payment_method` TEXT, `date` TEXT, `date_time` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -17,12 +17,6 @@
           {
             "fieldPath": "title",
             "columnName": "title",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "regDate",
-            "columnName": "registration_date",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -120,7 +114,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'da509879566d6d27b6741d756a30c912')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'baae90c7c0123f4fca305b6826882c14')"
     ]
   }
 }

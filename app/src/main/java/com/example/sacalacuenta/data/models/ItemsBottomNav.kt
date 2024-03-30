@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ListAlt
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.ListAlt
 import androidx.compose.material.icons.outlined.Receipt
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.sacalacuenta.R
@@ -24,6 +25,12 @@ sealed class Screen(
         route = "historial_screen",
         title = R.string.historial,
         icon = Icons.Outlined.CalendarMonth
+    )
+
+    data object TicketScreen : Screen(
+        route = "ticket_screen",
+        title = R.string.ticket,
+        icon = Icons.Outlined.Receipt
     )
 }
 

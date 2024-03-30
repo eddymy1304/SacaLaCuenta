@@ -17,16 +17,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,18 +42,10 @@ import java.util.regex.Pattern
 fun DetalleCuentaCard(
     modifier: Modifier = Modifier,
     position: Int,
-    detalleCuenta: DetalleCuentaView,
-    onValueChangeProduct: (DetalleCuentaView) -> Unit,
+    det: DetalleCuentaView,
+    onValueChangeProduct: () -> Unit,
     onClickDelete: () -> Unit
 ) {
-
-    val focus = remember { FocusRequester() }
-
-    var textName by remember { mutableStateOf(detalleCuenta.name.orEmpty()) }
-    var textQuantity by remember { mutableStateOf(detalleCuenta.quantity?.toString().orEmpty()) }
-    var textPrice by remember { mutableStateOf(detalleCuenta.price?.toString().orEmpty()) }
-    var textTotal by remember { mutableStateOf(detalleCuenta.total?.toString().orEmpty()) }
-    var lockedTextField by remember { mutableStateOf(detalleCuenta.itemLocked) }
 
     Card(
         modifier = modifier,
@@ -86,13 +76,9 @@ fun DetalleCuentaCard(
                     focusedBorderColor = Color.Transparent,
                     unfocusedBorderColor = Color.Transparent
                 ),
-                value = textName,
+                value = det.name.value.orEmpty(),
                 singleLine = true,
-                onValueChange = {
-                    textName = it
-                    detalleCuenta.name = it
-                    onValueChangeProduct(detalleCuenta)
-                },
+                onValueChange = { det.name.value = it },
                 modifier = Modifier
                     .constrainAs(name) {
                         start.linkTo(number.end)
@@ -104,8 +90,7 @@ fun DetalleCuentaCard(
                 },
                 textStyle = LocalTextStyle.current.copy(
                     textAlign = TextAlign.Center,
-                    fontSize = 20.sp,
-                    fontFamily = FontFamily.Cursive
+                    fontSize = 24.sp,
                 )
             )
 
@@ -122,33 +107,33 @@ fun DetalleCuentaCard(
                     textAlign = TextAlign.End,
                     fontSize = 16.sp
                 ),
-                enabled = !lockedTextField,
+                enabled = !det.itemLocked.value,
                 label = {
                     Text(text = stringResource(id = R.string.label_title_cantidad))
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                value = textQuantity,
+                value = det.textQuantity.value.orEmpty(),
                 onValueChange = {
-                    textQuantity = filterNumberDecimal(it, 4, 2)
-                    detalleCuenta.quantity = try {
-                        textQuantity.toDoubleOrNull()
+                    det.textQuantity.value = filterNumberDecimal(it, 4, 2)
+                    det.quantity.value = try {
+                        det.textQuantity.value?.toDoubleOrNull()
                     } catch (e: Exception) {
                         null
                     }
-                    if (textPrice.isNotBlank()) {
+                    if (det.price.value != null) {
                         val res = try {
-                            textQuantity.toDouble() * textPrice.toDouble()
+                            (det.textQuantity.value?.toDouble() ?: 0.0) * (det.price.value ?: 0.0)
                         } catch (e: Exception) {
                             0.00
                         }
-                        textTotal = try {
+                        det.textTotal.value = try {
                             String.format(Locale.getDefault(), "%.2f", res)
                         } catch (e: Exception) {
                             ""
                         }
-                        detalleCuenta.total = textTotal.toDoubleOrNull()
+                        det.total.value = det.textTotal.value?.toDoubleOrNull()
                     }
-                    onValueChangeProduct(detalleCuenta)
+                    onValueChangeProduct()
                 },
                 singleLine = true
             )
@@ -162,29 +147,30 @@ fun DetalleCuentaCard(
                         bottom.linkTo(parent.bottom, margin = 8.dp)
                         width = Dimension.value(100.dp)
                     },
-                enabled = !lockedTextField,
-                value = textPrice,
+                enabled = !det.itemLocked.value,
+                value = det.textPrice.value.orEmpty(),
                 onValueChange = {
-                    textPrice = filterNumberDecimal(it, 4, 2)
-                    detalleCuenta.price = try {
-                        textPrice.toDoubleOrNull()
+                    det.textPrice.value = filterNumberDecimal(it, 4, 2)
+                    det.price.value = try {
+                        det.textPrice.value?.toDoubleOrNull()
                     } catch (e: Exception) {
                         null
                     }
-                    if (textQuantity.isNotBlank()) {
+                    if (det.quantity.value != null) {
                         val res = try {
-                            textQuantity.toDouble() * textPrice.toDouble()
+                            (det.quantity.value ?: 0.0) * (det.textPrice.value?.toDouble() ?: 0.0)
                         } catch (e: Exception) {
                             0.00
                         }
-                        textTotal = try {
+
+                        det.textTotal.value = try {
                             String.format(Locale.getDefault(), "%.2f", res)
                         } catch (e: Exception) {
                             "0.00"
                         }
-                        detalleCuenta.total = textTotal.toDoubleOrNull()
+                        det.total.value = det.textTotal.value?.toDoubleOrNull()
                     }
-                    onValueChangeProduct(detalleCuenta)
+                    onValueChangeProduct()
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -197,18 +183,18 @@ fun DetalleCuentaCard(
                 )
             )
             OutlinedTextField(
-                value = textTotal,
+                value = det.textTotal.value.orEmpty(),
                 onValueChange = {
-                    textTotal = filterNumberDecimal(it, 4, 2)
-                    detalleCuenta.total = try {
-                        textTotal.toDoubleOrNull()
+                    det.textTotal.value = filterNumberDecimal(it, 4, 2)
+                    det.total.value = try {
+                        det.textTotal.value?.toDoubleOrNull()
                     } catch (e: Exception) {
                         null
                     }
-                    onValueChangeProduct(detalleCuenta)
+                    onValueChangeProduct()
                 },
                 singleLine = true,
-                enabled = lockedTextField,
+                enabled = det.itemLocked.value,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier
                     .constrainAs(total) {
@@ -217,8 +203,7 @@ fun DetalleCuentaCard(
                         end.linkTo(parent.end, margin = 8.dp)
                         bottom.linkTo(parent.bottom, margin = 8.dp)
                         width = Dimension.value(100.dp)
-                    }
-                    .focusRequester(focus),
+                    },
                 textStyle = LocalTextStyle.current.copy(
                     textAlign = TextAlign.End,
                     fontSize = 16.sp
@@ -248,19 +233,15 @@ fun DetalleCuentaCard(
                     top.linkTo(parent.top)
                 },
                 onClick = {
-                    lockedTextField = !lockedTextField
-                    textQuantity = ""
-                    textPrice = ""
-                    textTotal = ""
-                    detalleCuenta.itemLocked = lockedTextField
-                    detalleCuenta.quantity = null
-                    detalleCuenta.price = null
-                    detalleCuenta.total = null
-                    onValueChangeProduct(detalleCuenta)
+                    det.itemLocked.value = !det.itemLocked.value
+                    det.quantity.value = null
+                    det.price.value = null
+                    det.total.value = null
+                    onValueChangeProduct()
                 }
             ) {
                 Icon(
-                    imageVector = if (lockedTextField) Icons.Outlined.Lock
+                    imageVector = if (det.itemLocked.value) Icons.Outlined.Lock
                     else Icons.Outlined.LockOpen,
                     tint = MaterialTheme.colorScheme.surfaceTint,
                     contentDescription = null
@@ -271,6 +252,7 @@ fun DetalleCuentaCard(
         }
         HorizontalDivider()
     }
+
 }
 
 fun filterNumberDecimal(inputText: String, maxIntegerPart: Int, maxDecimalPart: Int): String {
@@ -319,11 +301,19 @@ fun PreviewDetalleCard() {
     SacaLaCuentaTheme {
         DetalleCuentaCard(
             modifier = Modifier.fillMaxWidth(),
-            detalleCuenta = DetalleCuentaView(
-                name = "Pollo",
-                quantity = null,
-                price = null,
-                total = null,
+            det = DetalleCuentaView(
+                name = remember {
+                    mutableStateOf("Pollo")
+                },
+                quantity = remember {
+                    mutableStateOf(null)
+                },
+                price = remember {
+                    mutableStateOf(null)
+                },
+                total = remember {
+                    mutableStateOf(null)
+                },
             ),
             position = 2,
             onValueChangeProduct = {},

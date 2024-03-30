@@ -16,4 +16,6 @@ class CuentaRepository @Inject constructor(
         cuentaDao.insertDetalleCuentas(list)
 
     fun getCuentasWithDetalles() = cuentaDao.getCuentasWithDetalles()
+
+    fun getLastCuentaWithDetalles() = cuentaDao.getLastCuentaWithDetalles()
 }

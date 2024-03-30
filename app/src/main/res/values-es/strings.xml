@@ -11,4 +11,13 @@
     <string name="label_title_total" translatable="true">Total</string>
     <string name="label_title_metodo_pago" translatable="true">Método de pago</string>
     <string name="save" translatable="true">Guardar</string>
+    <string name="empty_field_title" translatable="true">Completar el campo del titulo</string>
+    <string name="empty_field_payment_method" translatable="true">Completar el campo del método de pago</string>
+    <string name="empty_list_det_cuenta" translatable="true">Se debe ingresar al menos un item</string>
+    <string name="empty_field_total_det_cuenta" translatable="true">Los items deben de tener al menos un total</string>
+    <string name="text_nombre">Nombre: %1$s</string>
+    <string name="text_metodo_pago">Metodo de pago: %1$s</string>
+    <string name="text_fecha">Fecha: %1$s</string>
+    <string name="label_title_cant">Cant</string>
+    <string name="ticket">Ticket</string>
 </resources>

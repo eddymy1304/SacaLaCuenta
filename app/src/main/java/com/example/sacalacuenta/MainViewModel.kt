@@ -1,11 +1,12 @@
 package com.example.sacalacuenta
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sacalacuenta.data.models.CuentaView
+import com.example.sacalacuenta.data.models.CuentaWithDetalleView
 import com.example.sacalacuenta.data.models.DetalleCuentaView
+import com.example.sacalacuenta.data.models.Screen
 import com.example.sacalacuenta.domain.GetCuentas
 import com.example.sacalacuenta.domain.SaveCuenta
 import com.example.sacalacuenta.utils.UiText
@@ -20,6 +21,12 @@ class MainViewModel @Inject constructor(
     private val saveCuenta: SaveCuenta,
     private val getCuentas: GetCuentas
 ) : ViewModel() {
+
+    private val _cuentaWithDetalle = MutableStateFlow(CuentaWithDetalleView())
+    val cuentaWithDetalle: StateFlow<CuentaWithDetalleView> get() = _cuentaWithDetalle
+
+    private val _navTo = MutableStateFlow(Pair(false, ""))
+    val navTo: StateFlow<Pair<Boolean, String>> get() = _navTo
 
     private val _nameUser = MutableStateFlow("")
     val nameUser: StateFlow<String> get() = _nameUser
@@ -39,6 +46,10 @@ class MainViewModel @Inject constructor(
     private val _total = MutableStateFlow(0.0)
     val total: StateFlow<Double> get() = _total
 
+    init {
+        Log.d("Eddycito", "MainViewModel init")
+    }
+
     fun deleteDetalleCuenta(det: DetalleCuentaView) {
         _listDetCuenta.value = _listDetCuenta.value.minus(det)
     }
@@ -47,47 +58,73 @@ class MainViewModel @Inject constructor(
         _listDetCuenta.value = _listDetCuenta.value.plus(detalle)
     }
 
-    fun updateCuenta(cuenta: CuentaView) {
-        _cuenta.value = cuenta.copy()
-    }
-
-    fun updateCurrentDetCuenta(position: Int, det: DetalleCuentaView) {
-        Log.d(
-            "UpdateCurrentDetCuenta", """
-            position: $position
-            det: $det
-            listDetCuenta: ${_listDetCuenta.value}
-        """.trimIndent()
-        )
-        val listUpdate = _listDetCuenta.value.toMutableList()
-        listUpdate[position] = det
-        _listDetCuenta.value = listUpdate
-        Log.d(
-            "UpdateCurrentDetCuenta", """
-            listUpdate: $listUpdate
-            listDetCuenta: ${_listDetCuenta.value}
-        """.trimIndent()
-        )
-        updateTotal()
-    }
-
-    private fun updateTotal() {
-        _total.value = _listDetCuenta.value.sumOf { it.total ?: 0.0 }
+    fun updateTotal() {
+        _total.value = _listDetCuenta.value.sumOf { it.total.value ?: 0.0 }
     }
 
     fun saveCuentaAndListDetCuenta(cuenta: CuentaView, listDetCuenta: List<DetalleCuentaView>) {
-        _showLoading.value = true
+
+        if (!validateCuenta(cuenta, listDetCuenta)) return
+
         viewModelScope.launch {
+            _showLoading.value = true
             saveCuenta(cuenta, listDetCuenta)
             _showLoading.value = false
+            resetCuenta()
+            _navTo.value = Pair(true, Screen.TicketScreen.route)
+        }
+    }
 
-            getCuentas().collect {
-                Log.d(
-                    "MainViewModel", """
-                    cuentas = $it
-                """.trimIndent()
-                )
+    fun resetCuenta() {
+        _cuenta.value = CuentaView()
+        _listDetCuenta.value = listOf(DetalleCuentaView())
+        _total.value = 0.0
+    }
+
+    private fun validateCuenta(
+        cuenta: CuentaView,
+        listDetCuenta: List<DetalleCuentaView>
+    ): Boolean {
+        return when {
+            cuenta.title.value.isNullOrBlank() -> {
+                _showMessage.value = UiText.StringResource(R.string.empty_field_title)
+                false
+            }
+
+            cuenta.paymentMethod.value.isNullOrBlank() -> {
+                _showMessage.value = UiText.StringResource(R.string.empty_field_payment_method)
+                false
+            }
+
+            listDetCuenta.isEmpty() -> {
+                _showMessage.value = UiText.StringResource(R.string.empty_list_det_cuenta)
+                false
+            }
+
+            listDetCuenta.any { it.total.value == null || it.total.value == 0.00 } -> {
+                _showMessage.value = UiText.StringResource(R.string.empty_field_total_det_cuenta)
+                false
+            }
+
+            else -> true
+        }
+    }
+
+    fun updateMessage(message: UiText) {
+        _showMessage.value = message
+    }
+
+    fun getLastTicket() {
+        viewModelScope.launch {
+            _showLoading.value = true
+            getCuentas.getLastCuentaWithDetalle().collect {
+                _cuentaWithDetalle.value = it
+                _showLoading.value = false
             }
         }
+    }
+
+    fun resetNavTo() {
+        _navTo.value = Pair(false, "")
     }
 }

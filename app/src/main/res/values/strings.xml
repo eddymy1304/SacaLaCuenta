@@ -15,4 +15,15 @@
     <string name="label_title_metodo_pago" translatable="true">Payment Method</string>
     <string name="text_total_cuenta" translatable="false">Total: %1$.2f</string>
     <string name="save" translatable="true">Save</string>
+    <string name="empty_field_title" translatable="true">Completing the title field</string>
+    <string name="empty_field_payment_method" translatable="true">Completing the payment method field</string>
+    <string name="empty_list_det_cuenta" translatable="true">You must enter at least one item</string>
+    <string name="empty_field_total_det_cuenta" translatable="true">The items must have a total</string>
+    <string name="text_nombre">Name: %1$s</string>
+    <string name="text_metodo_pago">Payment Method: %1$s</string>
+    <string name="text_fecha">Date: %1$s</string>
+    <string name="label_title_cant" translatable="true">QTY</string>
+    <string name="label_title_Uni" translatable="false">P.U</string>
+    <string name="ticket" translatable="true">Ticket</string>
+    <string name="number_two_decimal" translatable="false">%1$.2f</string>
 </resources>

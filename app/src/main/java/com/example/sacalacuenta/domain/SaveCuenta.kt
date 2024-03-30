@@ -12,11 +12,12 @@ class SaveCuenta @Inject constructor(
     private val repository: CuentaRepository
 ) {
     suspend operator fun invoke(cuenta: CuentaView, listDet: List<DetalleCuentaView>) {
+
         val cuentaEntity = CuentaEntity(
-            title = cuenta.title,
-            paymentMethod = cuenta.paymentMethod,
+            title = cuenta.title.value.orEmpty(),
+            paymentMethod = cuenta.paymentMethod.value.orEmpty(),
             numberItems = listDet.size,
-            total = listDet.sumOf { it.total ?: 0.0 },
+            total = listDet.sumOf { it.total.value ?: 0.0 },
             date = Utils.getDate(),
             dateTime = Utils.getDateTime()
         )
@@ -28,10 +29,10 @@ class SaveCuenta @Inject constructor(
         val listDetalleCuenta = listDet.map {
             DetalleCuentaEntity(
                 idCuenta = newCuenta.id,
-                name = it.name,
-                quantity = it.quantity,
-                price = it.price,
-                total = it.total
+                name = it.name.value,
+                quantity = it.quantity.value,
+                price = it.price.value,
+                total = it.total.value
             )
         }
 
