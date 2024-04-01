@@ -1,19 +1,21 @@
 package com.example.sacalacuenta.ui.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.LocalGroceryStore
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,18 +35,20 @@ fun TicketScreen(
     navController: NavHostController,
     viewModel: MainViewModel
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.getLastTicket()
-    }
+
     val cuentaWithDetalle by viewModel.cuentaWithDetalle.collectAsState()
 
     TicketScreen(
         modifier = modifier,
         textTitle = cuentaWithDetalle.cuenta.title.value.orEmpty(),
         textPaymentMethod = cuentaWithDetalle.cuenta.paymentMethod.value.orEmpty(),
-        textDate = cuentaWithDetalle.cuenta.regDate.orEmpty(),
+        textDate = cuentaWithDetalle.cuenta.dateTime.orEmpty(),
         textTotal = cuentaWithDetalle.cuenta.total.value ?: 0.0,
-        listDet = cuentaWithDetalle.listDetCuenta
+        listDet = cuentaWithDetalle.listDetCuenta,
+        onClickIconHome = { navController.navigateUp() },
+        onClickIconShare = {
+
+        }
     )
 }
 
@@ -56,12 +60,14 @@ fun TicketScreen(
     textDate: String = "",
     textTotal: Double = 0.0,
     listDet: List<DetalleCuentaView> = listOf(),
+    onClickIconShare: () -> Unit = {},
+    onClickIconHome: () -> Unit = {}
 ) {
     ConstraintLayout(modifier = modifier) {
-        val (image, title, method, cab, list, total, date, div1, div2) = createRefs()
+        val (image, title, method, cab, list, total, date, div1, div2, iconShare, iconHome) = createRefs()
 
-        Image(
-            painter = painterResource(id = R.drawable.logo),
+        Icon(
+            imageVector = Icons.Outlined.LocalGroceryStore,
             contentDescription = null,
             modifier = Modifier.constrainAs(image) {
                 top.linkTo(parent.top, margin = 8.dp)
@@ -70,8 +76,7 @@ fun TicketScreen(
                 width = Dimension.value(100.dp)
                 height = Dimension.value(100.dp)
             },
-            contentScale = ContentScale.Crop,
-            alignment = Alignment.Center
+            tint = MaterialTheme.colorScheme.primary
         )
 
         Text(
@@ -142,10 +147,38 @@ fun TicketScreen(
             modifier = Modifier.constrainAs(total) {
                 top.linkTo(div2.bottom, margin = 8.dp)
                 end.linkTo(parent.end, margin = 16.dp)
-                bottom.linkTo(parent.bottom, margin = 8.dp)
+                bottom.linkTo(iconShare.top, margin = 8.dp)
             }
         )
 
+        IconButton(
+            modifier = Modifier.constrainAs(iconShare) {
+                bottom.linkTo(parent.bottom, margin = 16.dp)
+                start.linkTo(parent.start, margin = 8.dp)
+                end.linkTo(iconHome.start, margin = 8.dp)
+            },
+            onClick = onClickIconShare
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Share,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+        IconButton(
+            modifier = Modifier.constrainAs(iconHome) {
+                bottom.linkTo(parent.bottom, margin = 16.dp)
+                end.linkTo(parent.end, margin = 8.dp)
+                start.linkTo(iconShare.end, margin = 8.dp)
+            },
+            onClick = onClickIconHome
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Home,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
     }
 }
 

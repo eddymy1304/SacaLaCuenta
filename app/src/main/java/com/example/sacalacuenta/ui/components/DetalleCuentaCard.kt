@@ -17,12 +17,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -68,7 +65,7 @@ fun DetalleCuentaCard(
                     start.linkTo(parent.start, margin = 8.dp)
                     top.linkTo(parent.top, margin = 8.dp)
                 },
-                fontSize = 16.sp
+                fontSize = 15.sp
             )
 
             OutlinedTextField(
@@ -97,15 +94,15 @@ fun DetalleCuentaCard(
             OutlinedTextField(
                 modifier = Modifier
                     .constrainAs(quantity) {
-                        start.linkTo(parent.start, margin = 8.dp)
+                        start.linkTo(parent.start)
                         top.linkTo(name.bottom)
-                        end.linkTo(price.start, margin = 8.dp)
+                        end.linkTo(price.start)
                         bottom.linkTo(parent.bottom, margin = 8.dp)
-                        width = Dimension.value(100.dp)
+                        width = Dimension.value(120.dp)
                     },
                 textStyle = LocalTextStyle.current.copy(
                     textAlign = TextAlign.End,
-                    fontSize = 16.sp
+                    fontSize = 15.sp
                 ),
                 enabled = !det.itemLocked.value,
                 label = {
@@ -145,7 +142,7 @@ fun DetalleCuentaCard(
                         top.linkTo(name.bottom)
                         end.linkTo(total.start)
                         bottom.linkTo(parent.bottom, margin = 8.dp)
-                        width = Dimension.value(100.dp)
+                        width = Dimension.value(90.dp)
                     },
                 enabled = !det.itemLocked.value,
                 value = det.textPrice.value.orEmpty(),
@@ -179,7 +176,7 @@ fun DetalleCuentaCard(
                 },
                 textStyle = LocalTextStyle.current.copy(
                     textAlign = TextAlign.End,
-                    fontSize = 16.sp
+                    fontSize = 15.sp
                 )
             )
             OutlinedTextField(
@@ -198,15 +195,15 @@ fun DetalleCuentaCard(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier
                     .constrainAs(total) {
-                        start.linkTo(price.end, margin = 8.dp)
+                        start.linkTo(price.end)
                         top.linkTo(name.bottom)
-                        end.linkTo(parent.end, margin = 8.dp)
+                        end.linkTo(parent.end)
                         bottom.linkTo(parent.bottom, margin = 8.dp)
-                        width = Dimension.value(100.dp)
+                        width = Dimension.value(90.dp)
                     },
                 textStyle = LocalTextStyle.current.copy(
                     textAlign = TextAlign.End,
-                    fontSize = 16.sp
+                    fontSize = 15.sp
                 ),
                 label = {
                     Text(text = stringResource(id = R.string.label_title_total))
@@ -237,6 +234,9 @@ fun DetalleCuentaCard(
                     det.quantity.value = null
                     det.price.value = null
                     det.total.value = null
+                    det.textQuantity.value = null
+                    det.textPrice.value = null
+                    det.textTotal.value = null
                     onValueChangeProduct()
                 }
             ) {

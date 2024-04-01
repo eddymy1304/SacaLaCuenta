@@ -88,10 +88,6 @@ fun CuentaScreen(
     """.trimIndent()
     )
 
-    LaunchedEffect(Unit) {
-        viewModel.resetCuenta()
-    }
-
     ConstraintLayout(modifier = modifier) {
         val (titleCuenta, listDet, fab, metodoPago, totalCuenta, btnSave, divider) = createRefs()
 

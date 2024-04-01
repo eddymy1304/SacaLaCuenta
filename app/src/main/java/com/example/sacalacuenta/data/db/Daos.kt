@@ -29,6 +29,10 @@ interface Daos {
     fun getCuentasWithDetalles(): Flow<List<CuentaWithDetalleCuenta>>
 
     @Transaction
+    @Query("SELECT * FROM CuentaEntity c WHERE c.date = :date")
+    fun getCuentasByDate(date:String): Flow<List<CuentaWithDetalleCuenta>>
+
+    @Transaction
     @Query("SELECT * FROM CuentaEntity ORDER BY id DESC LIMIT 1")
     fun getLastCuentaWithDetalles(): Flow<CuentaWithDetalleCuenta>
 

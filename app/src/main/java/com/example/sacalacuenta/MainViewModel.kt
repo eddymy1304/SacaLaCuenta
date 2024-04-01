@@ -6,11 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.sacalacuenta.data.models.CuentaView
 import com.example.sacalacuenta.data.models.CuentaWithDetalleView
 import com.example.sacalacuenta.data.models.DetalleCuentaView
-import com.example.sacalacuenta.data.models.Screen
+import com.example.sacalacuenta.data.models.Screen.TicketScreen
 import com.example.sacalacuenta.domain.GetCuentas
 import com.example.sacalacuenta.domain.SaveCuenta
 import com.example.sacalacuenta.utils.UiText
+import com.example.sacalacuenta.utils.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -21,6 +23,15 @@ class MainViewModel @Inject constructor(
     private val saveCuenta: SaveCuenta,
     private val getCuentas: GetCuentas
 ) : ViewModel() {
+
+    private var _showDatePicker = MutableStateFlow(false)
+    val showDatePicker: StateFlow<Boolean> get() = _showDatePicker
+
+    private val _fecha = MutableStateFlow(Utils.getDate())
+    val fecha: StateFlow<String> get() = _fecha
+
+    private val _listCuentaWithDetalle = MutableStateFlow<List<CuentaWithDetalleView>>(listOf())
+    val listCuentaWithDetalle: StateFlow<List<CuentaWithDetalleView>> get() = _listCuentaWithDetalle
 
     private val _cuentaWithDetalle = MutableStateFlow(CuentaWithDetalleView())
     val cuentaWithDetalle: StateFlow<CuentaWithDetalleView> get() = _cuentaWithDetalle
@@ -71,7 +82,8 @@ class MainViewModel @Inject constructor(
             saveCuenta(cuenta, listDetCuenta)
             _showLoading.value = false
             resetCuenta()
-            _navTo.value = Pair(true, Screen.TicketScreen.route)
+            getLastTicket()
+            _navTo.value = Pair(true, TicketScreen.route)
         }
     }
 
@@ -126,5 +138,38 @@ class MainViewModel @Inject constructor(
 
     fun resetNavTo() {
         _navTo.value = Pair(false, "")
+    }
+
+    fun getAllTickets() {
+        viewModelScope.launch {
+            _showLoading.value = true
+            getCuentas().collect {
+                _listCuentaWithDetalle.value = it
+                _showLoading.value = false
+            }
+        }
+    }
+
+    fun getTicketsByDate() {
+        viewModelScope.launch {
+            _showLoading.value = true
+            delay(500L) // Simulate network delay()
+            getCuentas.getCuentasByDate(_fecha.value).collect {
+                _listCuentaWithDetalle.value = it
+                _showLoading.value = false
+            }
+        }
+    }
+
+    fun updateCuentaWithDetalle(cuentaWithDetalle: CuentaWithDetalleView) {
+        _cuentaWithDetalle.value = cuentaWithDetalle
+    }
+
+    fun updateShowDatePicker(show: Boolean) {
+        _showDatePicker.value = show
+    }
+
+    fun updateFecha(fecha: String) {
+        _fecha.value = fecha
     }
 }

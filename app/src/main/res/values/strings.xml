@@ -26,4 +26,10 @@
     <string name="label_title_Uni" translatable="false">P.U</string>
     <string name="ticket" translatable="true">Ticket</string>
     <string name="number_two_decimal" translatable="false">%1$.2f</string>
+    <string name="hint_fecha">Date</string>
+    <string name="ok" translatable="false">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="total_by_day">Total by day: %1$.2f</string>
+    <string name="title_export_to_csv">Exportar cuentas</string>
+    <string name="message_export_to_csv">¿Desea exportar las cuentas a un archivo CSV</string>
 </resources>

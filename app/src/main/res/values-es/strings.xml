@@ -20,4 +20,9 @@
     <string name="text_fecha">Fecha: %1$s</string>
     <string name="label_title_cant">Cant</string>
     <string name="ticket">Ticket</string>
+    <string name="hint_fecha">Fecha</string>
+    <string name="cancel" translatable="true">Cancelar</string>
+    <string name="total_by_day">Total por día: %1$.2f</string>
+    <string name="title_export_to_csv">Exportar cuentas</string>
+    <string name="message_export_to_csv">¿Desea exportar las cuentas a un archivo CSV</string>
 </resources>

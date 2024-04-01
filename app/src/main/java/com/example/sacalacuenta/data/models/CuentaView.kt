@@ -7,7 +7,8 @@ import com.example.sacalacuenta.utils.Utils
 
 data class CuentaView(
     var id: Int? = null,
-    var regDate: String? = null,
+    var date: String? = null,
+    var dateTime: String? = null,
     var numberItems: Int? = null,
     var title: MutableState<String?> = mutableStateOf(null),
     var total: MutableState<Double?> = mutableStateOf(null),
@@ -15,7 +16,8 @@ data class CuentaView(
 ) {
     constructor(response: CuentaEntity) : this(
         id = response.id,
-        regDate = Utils.formatDateTime(response.dateTime),
+        date = response.date,
+        dateTime = Utils.formatDateTime(response.dateTime),
         numberItems = response.numberItems,
         title = mutableStateOf(response.title),
         total = mutableStateOf(response.total),

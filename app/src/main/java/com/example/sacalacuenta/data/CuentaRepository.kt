@@ -18,4 +18,6 @@ class CuentaRepository @Inject constructor(
     fun getCuentasWithDetalles() = cuentaDao.getCuentasWithDetalles()
 
     fun getLastCuentaWithDetalles() = cuentaDao.getLastCuentaWithDetalles()
+
+    fun getCuentasByDate(date: String) = cuentaDao.getCuentasByDate(date)
 }

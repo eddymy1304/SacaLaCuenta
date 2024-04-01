@@ -11,11 +11,28 @@ class GetCuentas @Inject constructor(
     private val repository: CuentaRepository
 ) {
 
-    operator fun invoke() = repository.getCuentasWithDetalles()
+    operator fun invoke() = flow {
+        repository.getCuentasWithDetalles().collect { cuenta ->
+            val listMap =
+                cuenta.map { CuentaWithDetalleView(it) }.sortedByDescending { it.cuenta.id }
+            emit(listMap)
+        }
+    }
 
     fun getLastCuentaWithDetalle() = flow {
         repository.getLastCuentaWithDetalles().collect {
             emit(CuentaWithDetalleView(it))
         }
     }
+
+    fun getCuentasByDate(date: String) = flow {
+        repository.getCuentasByDate(date).collect { cuenta ->
+            val listMap = cuenta.map {
+                CuentaWithDetalleView(it)
+            }.sortedByDescending { it.cuenta.id }
+            emit(listMap)
+        }
+    }
+
+
 }
