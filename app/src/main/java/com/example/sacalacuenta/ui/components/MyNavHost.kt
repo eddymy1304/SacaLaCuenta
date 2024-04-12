@@ -1,5 +1,7 @@
 package com.example.sacalacuenta.ui.components
 
+import android.graphics.Picture
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -14,6 +16,8 @@ import com.example.sacalacuenta.ui.screens.TicketScreen
 @Composable
 fun MyNavHost(
     modifier: Modifier = Modifier,
+    picture: Picture,
+    paddingValues: PaddingValues = PaddingValues(),
     viewModel: MainViewModel,
     navController: NavHostController,
     startDestination: String
@@ -38,10 +42,16 @@ fun MyNavHost(
         }
 
         composable(Screen.TicketScreen.route) {
-            TicketScreen(
-                navController = navController,
-                viewModel = viewModel
-            )
+/*            CaptureComposable(
+                picture = picture,
+                padding = paddingValues
+            ) {*/
+                TicketScreen(
+                    navController = navController,
+                    viewModel = viewModel
+                )
+/*            }*/
         }
+
     }
 }

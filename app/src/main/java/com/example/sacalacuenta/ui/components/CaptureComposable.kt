@@ -1,27 +1,23 @@
 package com.example.sacalacuenta.ui.components
 
-import android.graphics.Bitmap
 import android.graphics.Picture
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.drawscope.draw
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun CaptureComposable(
-    padding: Dp,
+    picture: Picture,
+    padding: PaddingValues,
     content: @Composable () -> Unit
 ) {
-
-    val picture = remember { Picture() }
 
     Column(
         modifier = Modifier
@@ -57,17 +53,4 @@ fun CaptureComposable(
     ) {
         content()
     }
-}
-
-private fun createBitmapFromPicture(picture: Picture): Bitmap {
-    val bitmap = Bitmap.createBitmap(
-        picture.width,
-        picture.height,
-        Bitmap.Config.ARGB_8888
-    )
-
-    val canvas = android.graphics.Canvas(bitmap)
-    canvas.drawColor(android.graphics.Color.WHITE)
-    canvas.drawPicture(picture)
-    return bitmap
 }

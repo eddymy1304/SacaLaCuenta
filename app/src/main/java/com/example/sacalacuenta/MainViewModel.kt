@@ -24,7 +24,10 @@ class MainViewModel @Inject constructor(
     private val getCuentas: GetCuentas
 ) : ViewModel() {
 
-    private var _showDatePicker = MutableStateFlow(false)
+    private val _onClickIconShare = MutableStateFlow(false)
+    val onClickIconShare: StateFlow<Boolean> get() = _onClickIconShare
+
+    private val _showDatePicker = MutableStateFlow(false)
     val showDatePicker: StateFlow<Boolean> get() = _showDatePicker
 
     private val _fecha = MutableStateFlow(Utils.getDate())
@@ -171,5 +174,9 @@ class MainViewModel @Inject constructor(
 
     fun updateFecha(fecha: String) {
         _fecha.value = fecha
+    }
+
+    fun updateOnClickIconShare(click: Boolean) {
+        _onClickIconShare.value = click
     }
 }

@@ -1,5 +1,6 @@
 package com.example.sacalacuenta.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -37,7 +38,7 @@ fun TicketScreen(
 ) {
 
     val cuentaWithDetalle by viewModel.cuentaWithDetalle.collectAsState()
-
+    Log.d("TicketScreen", "cuentaWithCuenta: $cuentaWithDetalle")
     TicketScreen(
         modifier = modifier,
         textTitle = cuentaWithDetalle.cuenta.title.value.orEmpty(),
@@ -46,9 +47,7 @@ fun TicketScreen(
         textTotal = cuentaWithDetalle.cuenta.total.value ?: 0.0,
         listDet = cuentaWithDetalle.listDetCuenta,
         onClickIconHome = { navController.navigateUp() },
-        onClickIconShare = {
-
-        }
+        onClickIconShare = { viewModel.updateOnClickIconShare(true) }
     )
 }
 

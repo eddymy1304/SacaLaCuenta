@@ -65,7 +65,7 @@ fun CuentaScreen(
 ) {
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    val focus = remember { FocusRequester() }
+    //val focus = remember { FocusRequester() }
 
     val showLoading by viewModel.showLoading.collectAsState()
 
@@ -106,8 +106,7 @@ fun CuentaScreen(
                     top.linkTo(parent.top)
                     start.linkTo(parent.start, margin = 8.dp)
                     width = Dimension.value(240.dp)
-                }
-                .focusRequester(focus),
+                },
             singleLine = true,
             value = cuenta.title.value.orEmpty(),
             onValueChange = {
@@ -234,10 +233,6 @@ fun CuentaScreen(
 
     AnimatedVisibility(visible = showLoading) {
         MySimpleLoading {}
-    }
-
-    LaunchedEffect(Unit) {
-        focus.requestFocus()
     }
 
     DisposableEffect(navTo) {
