@@ -24,9 +24,6 @@ class MainViewModel @Inject constructor(
     private val getCuentas: GetCuentas
 ) : ViewModel() {
 
-    private val _onClickIconShare = MutableStateFlow(false)
-    val onClickIconShare: StateFlow<Boolean> get() = _onClickIconShare
-
     private val _showDatePicker = MutableStateFlow(false)
     val showDatePicker: StateFlow<Boolean> get() = _showDatePicker
 
@@ -90,7 +87,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun resetCuenta() {
+    private fun resetCuenta() {
         _cuenta.value = CuentaView()
         _listDetCuenta.value = listOf(DetalleCuentaView())
         _total.value = 0.0
@@ -129,7 +126,7 @@ class MainViewModel @Inject constructor(
         _showMessage.value = message
     }
 
-    fun getLastTicket() {
+    private fun getLastTicket() {
         viewModelScope.launch {
             _showLoading.value = true
             getCuentas.getLastCuentaWithDetalle().collect {
@@ -174,9 +171,5 @@ class MainViewModel @Inject constructor(
 
     fun updateFecha(fecha: String) {
         _fecha.value = fecha
-    }
-
-    fun updateOnClickIconShare(click: Boolean) {
-        _onClickIconShare.value = click
     }
 }

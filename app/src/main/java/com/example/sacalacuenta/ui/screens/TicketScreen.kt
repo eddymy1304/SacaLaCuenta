@@ -1,5 +1,12 @@
 package com.example.sacalacuenta.ui.screens
 
+import android.content.Context
+import android.content.Intent
+import android.content.Intent.createChooser
+import android.graphics.Bitmap
+import android.media.MediaScannerConnection
+import android.net.Uri
+import android.os.Environment
 import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,12 +23,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.graphics.rememberGraphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavHostController
 import com.example.sacalacuenta.MainViewModel
 import com.example.sacalacuenta.R
@@ -29,6 +43,10 @@ import com.example.sacalacuenta.data.models.DetalleCuentaView
 import com.example.sacalacuenta.ui.components.CabListDetTicket
 import com.example.sacalacuenta.ui.components.ItemTicket
 import com.example.sacalacuenta.ui.theme.SacaLaCuentaTheme
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import java.io.File
+import kotlin.coroutines.resume
 
 @Composable
 fun TicketScreen(
@@ -36,18 +54,35 @@ fun TicketScreen(
     navController: NavHostController,
     viewModel: MainViewModel
 ) {
-
     val cuentaWithDetalle by viewModel.cuentaWithDetalle.collectAsState()
+
     Log.d("TicketScreen", "cuentaWithCuenta: $cuentaWithDetalle")
+
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val graphicsLayer = rememberGraphicsLayer()
+
     TicketScreen(
-        modifier = modifier,
+        modifier = modifier
+/*            .drawWithContent {
+                graphicsLayer.record {
+                    this@drawWithContent.drawContent()
+                }
+                drawLayer(graphicsLayer)
+            }*/,
         textTitle = cuentaWithDetalle.cuenta.title.value.orEmpty(),
         textPaymentMethod = cuentaWithDetalle.cuenta.paymentMethod.value.orEmpty(),
         textDate = cuentaWithDetalle.cuenta.dateTime.orEmpty(),
         textTotal = cuentaWithDetalle.cuenta.total.value ?: 0.0,
         listDet = cuentaWithDetalle.listDetCuenta,
         onClickIconHome = { navController.navigateUp() },
-        onClickIconShare = { viewModel.updateOnClickIconShare(true) }
+        onClickIconShare = {
+/*            scope.launch {
+                //val bitmap = graphicsLayer.toImageBitmap()
+                //val uri = bitmap.asAndroidBitmap().saveToDisk(context)
+                //shareBitmap(context, uri)
+            }*/
+        }
     )
 }
 
@@ -62,6 +97,7 @@ fun TicketScreen(
     onClickIconShare: () -> Unit = {},
     onClickIconHome: () -> Unit = {}
 ) {
+
     ConstraintLayout(modifier = modifier) {
         val (image, title, method, cab, list, total, date, div1, div2, iconShare, iconHome) = createRefs()
 
@@ -189,4 +225,48 @@ fun PreviewTicketScreen() {
             modifier = Modifier.fillMaxSize(),
         )
     }
+}
+
+private suspend fun Bitmap.saveToDisk(context: Context): Uri {
+    val file = File(
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+        "screenshot-${System.currentTimeMillis()}.png"
+    )
+
+    file.writeBitmap(this, Bitmap.CompressFormat.PNG, 100)
+
+    return scanFilePath(context, file.path) ?: throw Exception("File could not be saved")
+}
+
+/**
+ * We call [MediaScannerConnection] to index the newly created image inside MediaStore to be visible
+ * for other apps, as well as returning its MediaStore Uri
+ */
+private suspend fun scanFilePath(context: Context, filePath: String): Uri? {
+    return suspendCancellableCoroutine { continuation ->
+        MediaScannerConnection.scanFile(
+            context,
+            arrayOf(filePath),
+            arrayOf("image/png")
+        ) { _, scannedUri ->
+            if (scannedUri == null) continuation.cancel(Exception("File $filePath could not be scanned"))
+            else continuation.resume(scannedUri)
+        }
+    }
+}
+
+private fun File.writeBitmap(bitmap: Bitmap, format: Bitmap.CompressFormat, quality: Int) {
+    outputStream().use { out ->
+        bitmap.compress(format, quality, out)
+        out.flush()
+    }
+}
+
+private fun shareBitmap(context: Context, uri: Uri) {
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "image/png"
+        putExtra(Intent.EXTRA_STREAM, uri)
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    startActivity(context, createChooser(intent, "Share your image"), null)
 }

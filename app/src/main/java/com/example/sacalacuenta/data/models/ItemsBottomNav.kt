@@ -2,13 +2,12 @@ package com.example.sacalacuenta.data.models
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ListAlt
 import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.ListAlt
 import androidx.compose.material.icons.outlined.Receipt
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.sacalacuenta.R
-import com.example.sacalacuenta.data.models.Screen.*
+import com.example.sacalacuenta.data.models.Screen.CuentaScreen
+import com.example.sacalacuenta.data.models.Screen.HistorialScreen
 
 sealed class Screen(
     val route: String,

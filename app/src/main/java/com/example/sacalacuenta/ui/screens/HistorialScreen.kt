@@ -72,9 +72,11 @@ fun HistorialScreen(
         modifier = modifier,
         onDismissDatePicker = { viewModel.updateShowDatePicker(false) },
         onDateSelectedDatePicker = {
-            viewModel.updateFecha(it)
-            viewModel.updateShowDatePicker(false)
-            viewModel.getTicketsByDate()
+            if (it.isNotBlank()) {
+                viewModel.updateFecha(it)
+                viewModel.updateShowDatePicker(false)
+                viewModel.getTicketsByDate()
+            }
         },
         onClickIconDate = { viewModel.updateShowDatePicker(true) }
     ) {
