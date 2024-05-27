@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sacalacuenta.data.models.CuentaView
 import com.example.sacalacuenta.data.models.CuentaWithDetalleView
 import com.example.sacalacuenta.data.models.DetalleCuentaView
-import com.example.sacalacuenta.data.models.Screen.TicketScreen
+import com.example.sacalacuenta.data.models.ScreenTicket
 import com.example.sacalacuenta.domain.GetCuentas
 import com.example.sacalacuenta.domain.SaveCuenta
 import com.example.sacalacuenta.utils.UiText
@@ -36,8 +36,8 @@ class MainViewModel @Inject constructor(
     private val _cuentaWithDetalle = MutableStateFlow(CuentaWithDetalleView())
     val cuentaWithDetalle: StateFlow<CuentaWithDetalleView> get() = _cuentaWithDetalle
 
-    private val _navTo = MutableStateFlow(Pair(false, ""))
-    val navTo: StateFlow<Pair<Boolean, String>> get() = _navTo
+    private val _navTo = MutableStateFlow(Pair(false, Any()))
+    val navTo: StateFlow<Pair<Boolean, Any>> get() = _navTo
 
     private val _nameUser = MutableStateFlow("")
     val nameUser: StateFlow<String> get() = _nameUser
@@ -83,7 +83,7 @@ class MainViewModel @Inject constructor(
             _showLoading.value = false
             resetCuenta()
             getLastTicket()
-            _navTo.value = Pair(true, TicketScreen.route)
+            _navTo.value = Pair(true, ScreenTicket)
         }
     }
 
@@ -137,7 +137,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun resetNavTo() {
-        _navTo.value = Pair(false, "")
+        _navTo.value = Pair(false, Any())
     }
 
     fun getAllTickets() {

@@ -231,7 +231,7 @@ fun CuentaScreen(
     }
 
     DisposableEffect(navTo) {
-        if (navTo.first && navTo.second.isNotBlank()) {
+        if (navTo.first) {
             navController.navigate(navTo.second)
             viewModel.resetNavTo()
         }

@@ -5,8 +5,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.example.sacalacuenta.MainViewModel
-import com.example.sacalacuenta.data.models.Screen
+import com.example.sacalacuenta.data.models.ScreenCuenta
+import com.example.sacalacuenta.data.models.ScreenHistorial
+import com.example.sacalacuenta.data.models.ScreenTicket
 import com.example.sacalacuenta.ui.screens.CuentaScreen
 import com.example.sacalacuenta.ui.screens.HistorialScreen
 import com.example.sacalacuenta.ui.screens.TicketScreen
@@ -16,23 +19,25 @@ fun MyNavHost(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel,
     navController: NavHostController,
-    startDestination: String
+    startDestination: Any
 ) {
     NavHost(
         navController = navController,
         startDestination = startDestination,
         modifier = modifier
     ) {
-        composable(Screen.CuentaScreen.route) {
+        composable<ScreenCuenta> { backStackEntry ->
+            val prueba = backStackEntry.toRoute<ScreenCuenta>()
             CuentaScreen(navController = navController, viewModel = viewModel)
         }
 
-        composable(Screen.HistorialScreen.route) {
+        composable<ScreenHistorial> {
             HistorialScreen(navController = navController, viewModel = viewModel)
         }
 
-        composable(Screen.TicketScreen.route) {
+        composable<ScreenTicket> {
             TicketScreen(navController = navController, viewModel = viewModel)
         }
     }
 }
+

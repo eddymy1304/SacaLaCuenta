@@ -64,12 +64,12 @@ fun TicketScreen(
 
     TicketScreen(
         modifier = modifier
-/*            .drawWithContent {
+            .drawWithContent {
                 graphicsLayer.record {
                     this@drawWithContent.drawContent()
                 }
                 drawLayer(graphicsLayer)
-            }*/,
+            },
         textTitle = cuentaWithDetalle.cuenta.title.value.orEmpty(),
         textPaymentMethod = cuentaWithDetalle.cuenta.paymentMethod.value.orEmpty(),
         textDate = cuentaWithDetalle.cuenta.dateTime.orEmpty(),
@@ -77,11 +77,11 @@ fun TicketScreen(
         listDet = cuentaWithDetalle.listDetCuenta,
         onClickIconHome = { navController.navigateUp() },
         onClickIconShare = {
-/*            scope.launch {
-                //val bitmap = graphicsLayer.toImageBitmap()
-                //val uri = bitmap.asAndroidBitmap().saveToDisk(context)
-                //shareBitmap(context, uri)
-            }*/
+            scope.launch {
+                val bitmap = graphicsLayer.toImageBitmap()
+                val uri = bitmap.asAndroidBitmap().saveToDisk(context)
+                shareBitmap(context, uri)
+            }
         }
     )
 }

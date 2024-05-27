@@ -34,12 +34,11 @@ import androidx.navigation.NavHostController
 import com.example.sacalacuenta.MainViewModel
 import com.example.sacalacuenta.R
 import com.example.sacalacuenta.data.models.CuentaWithDetalleView
-import com.example.sacalacuenta.data.models.Screen.TicketScreen
+import com.example.sacalacuenta.data.models.ScreenTicket
 import com.example.sacalacuenta.ui.components.DatePickerDialog
 import com.example.sacalacuenta.ui.components.ItemHistorial
 import com.example.sacalacuenta.ui.theme.SacaLaCuentaTheme
 import com.example.sacalacuenta.utils.Utils
-import kotlin.math.sin
 
 @Composable
 fun HistorialScreen(
@@ -81,7 +80,7 @@ fun HistorialScreen(
         onClickIconDate = { viewModel.updateShowDatePicker(true) }
     ) {
         viewModel.updateCuentaWithDetalle(it)
-        navController.navigate(TicketScreen.route)
+        navController.navigate(ScreenTicket)
     }
 }
 

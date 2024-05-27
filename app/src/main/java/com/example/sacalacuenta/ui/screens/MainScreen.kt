@@ -10,12 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.example.sacalacuenta.MainViewModel
 import com.example.sacalacuenta.R
-import com.example.sacalacuenta.data.models.Screen.CuentaScreen
-import com.example.sacalacuenta.data.models.getListItemsBottomNav
-import com.example.sacalacuenta.ui.components.MyBottomBar
+import com.example.sacalacuenta.data.models.ScreenCuenta
 import com.example.sacalacuenta.ui.components.MyNavHost
 import com.example.sacalacuenta.ui.components.MyTopBar
 import com.example.sacalacuenta.ui.theme.SacaLaCuentaTheme
@@ -31,20 +31,25 @@ fun MainScreen(
 
     val navController = rememberNavController()
 
+    val backstackEntry = navController.currentBackStackEntryAsState()
+
     Scaffold(
         modifier = modifier,
         topBar = {
             MyTopBar(
                 title = stringResource(id = R.string.app_name),
-                subTitle = if (nameUser.isNotBlank()) stringResource(id = R.string.sub_title, nameUser)
+                subTitle = if (nameUser.isNotBlank()) stringResource(
+                    id = R.string.sub_title,
+                    nameUser
+                )
                 else stringResource(id = R.string.sub_title_with_out),
-                showIconNav = navController.currentDestination?.route != CuentaScreen.route
+                showIconNav = backstackEntry.value?.toRoute<ScreenCuenta>() == null,
             ) {
-                if (navController.currentDestination?.route == CuentaScreen.route) finished()
+                if (backstackEntry.value?.toRoute<ScreenCuenta>() != null) finished()
                 else navController.navigateUp()
             }
         },
-        bottomBar = { MyBottomBar(navController = navController, items = getListItemsBottomNav()) }
+        //bottomBar = { MyBottomBar(navController = navController, items = getListItemsBottomNav()) }
     ) {
         MyNavHost(
             modifier = Modifier
@@ -52,7 +57,7 @@ fun MainScreen(
                 .fillMaxSize(),
             viewModel = viewModel,
             navController = navController,
-            startDestination = CuentaScreen.route
+            startDestination = ScreenCuenta
         )
     }
 }
