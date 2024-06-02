@@ -3,9 +3,11 @@ package com.example.sacalacuenta.ui.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -21,6 +23,7 @@ fun MyTopBar(
     title: String = "",
     subTitle: String = "",
     showIconNav: Boolean = false,
+    onClickAction: () -> Unit,
     onClickNav: () -> Unit,
 ) {
     TopAppBar(
@@ -40,6 +43,15 @@ fun MyTopBar(
                     )
                 }
             }
+        },
+        actions = {
+            IconButton(onClick = {}) {
+                Icon(
+                    tint = MaterialTheme.colorScheme.primary,
+                    imageVector = Icons.Outlined.Settings,
+                    contentDescription = null
+                )
+            }
         }
     )
 }
@@ -50,7 +62,8 @@ fun PreviewMyTopBar() {
     SacaLaCuentaTheme {
         MyTopBar(
             title = "SacaLaCuenta",
-            subTitle = "Bienvenido, Eddy."
+            subTitle = "Bienvenido, Eddy.",
+            onClickAction = {}
         ) {
 
         }

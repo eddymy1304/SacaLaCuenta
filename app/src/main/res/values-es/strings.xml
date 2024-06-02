@@ -25,4 +25,5 @@
     <string name="total_by_day">Total por día: %1$.2f</string>
     <string name="title_export_to_csv">Exportar cuentas</string>
     <string name="message_export_to_csv">¿Desea exportar las cuentas a un archivo CSV</string>
+    <string name="settings">Configuración</string>
 </resources>

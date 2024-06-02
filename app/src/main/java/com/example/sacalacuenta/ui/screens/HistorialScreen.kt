@@ -34,7 +34,7 @@ import androidx.navigation.NavHostController
 import com.example.sacalacuenta.MainViewModel
 import com.example.sacalacuenta.R
 import com.example.sacalacuenta.data.models.CuentaWithDetalleView
-import com.example.sacalacuenta.data.models.ScreenTicket
+import com.example.sacalacuenta.data.models.Screen.ScreenTicket
 import com.example.sacalacuenta.ui.components.DatePickerDialog
 import com.example.sacalacuenta.ui.components.ItemHistorial
 import com.example.sacalacuenta.ui.theme.SacaLaCuentaTheme

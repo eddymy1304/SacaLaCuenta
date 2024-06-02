@@ -6,7 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.sacalacuenta.data.models.CuentaView
 import com.example.sacalacuenta.data.models.CuentaWithDetalleView
 import com.example.sacalacuenta.data.models.DetalleCuentaView
-import com.example.sacalacuenta.data.models.ScreenTicket
+import com.example.sacalacuenta.data.models.Screen
+import com.example.sacalacuenta.data.models.Screen.ScreenTicket
 import com.example.sacalacuenta.domain.GetCuentas
 import com.example.sacalacuenta.domain.SaveCuenta
 import com.example.sacalacuenta.utils.UiText

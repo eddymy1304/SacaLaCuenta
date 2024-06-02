@@ -5,11 +5,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import com.example.sacalacuenta.MainViewModel
-import com.example.sacalacuenta.data.models.ScreenCuenta
-import com.example.sacalacuenta.data.models.ScreenHistorial
-import com.example.sacalacuenta.data.models.ScreenTicket
+import com.example.sacalacuenta.data.models.Screen.ScreenCuenta
+import com.example.sacalacuenta.data.models.Screen.ScreenHistorial
+import com.example.sacalacuenta.data.models.Screen.ScreenTicket
 import com.example.sacalacuenta.ui.screens.CuentaScreen
 import com.example.sacalacuenta.ui.screens.HistorialScreen
 import com.example.sacalacuenta.ui.screens.TicketScreen
