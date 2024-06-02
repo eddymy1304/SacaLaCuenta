@@ -1,5 +1,6 @@
 package com.example.sacalacuenta.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -31,11 +32,16 @@ fun MainScreen(
 
     val navController = rememberNavController()
 
-    val backstackEntry = navController.currentBackStackEntryAsState()
+    val backstackEntry by navController.currentBackStackEntryAsState()
 
     Scaffold(
         modifier = modifier,
         topBar = {
+            val currentRoute = backstackEntry?.destination?.route
+            Log.d("Eddycito","""
+                route: $currentRoute
+                screen cuenta : ${ScreenCuenta::class.qualifiedName}
+            """.trimIndent())
             MyTopBar(
                 title = stringResource(id = R.string.app_name),
                 subTitle = if (nameUser.isNotBlank()) stringResource(
@@ -43,9 +49,9 @@ fun MainScreen(
                     nameUser
                 )
                 else stringResource(id = R.string.sub_title_with_out),
-                showIconNav = backstackEntry.value?.toRoute<ScreenCuenta>() == null,
+                showIconNav = currentRoute != ScreenCuenta::class.qualifiedName,
             ) {
-                if (backstackEntry.value?.toRoute<ScreenCuenta>() != null) finished()
+                if (currentRoute == ScreenCuenta::class.qualifiedName) finished()
                 else navController.navigateUp()
             }
         },

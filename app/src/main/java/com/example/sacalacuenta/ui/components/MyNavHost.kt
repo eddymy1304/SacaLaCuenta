@@ -26,8 +26,7 @@ fun MyNavHost(
         startDestination = startDestination,
         modifier = modifier
     ) {
-        composable<ScreenCuenta> { backStackEntry ->
-            val prueba = backStackEntry.toRoute<ScreenCuenta>()
+        composable<ScreenCuenta> {
             CuentaScreen(navController = navController, viewModel = viewModel)
         }
 
