@@ -1,29 +1,46 @@
 package com.example.sacalacuenta
 
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sacalacuenta.data.models.CuentaView
 import com.example.sacalacuenta.data.models.CuentaWithDetalleView
 import com.example.sacalacuenta.data.models.DetalleCuentaView
-import com.example.sacalacuenta.data.models.Screen
 import com.example.sacalacuenta.data.models.Screen.ScreenTicket
 import com.example.sacalacuenta.domain.GetCuentas
+import com.example.sacalacuenta.domain.GetUserName
 import com.example.sacalacuenta.domain.SaveCuenta
+import com.example.sacalacuenta.domain.SaveUserName
 import com.example.sacalacuenta.utils.UiText
 import com.example.sacalacuenta.utils.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val saveCuenta: SaveCuenta,
-    private val getCuentas: GetCuentas
+    private val getCuentas: GetCuentas,
+    private val saveUserName: SaveUserName,
+    private val getUserName: GetUserName
 ) : ViewModel() {
+
+    private val _showBottomNav = MutableStateFlow(true)
+    val showBottomNav: StateFlow<Boolean> = _showBottomNav.asStateFlow()
+
+    private val _showActions = MutableStateFlow(true)
+    val showActions: StateFlow<Boolean> = _showActions.asStateFlow()
+
+    private val _userName = MutableStateFlow("")
+    val userName: StateFlow<String> = _userName.asStateFlow()
+
+    private val _title = MutableStateFlow(ScreenTicket.title)
+    val title: StateFlow<Int> = _title.asStateFlow()
 
     private val _showDatePicker = MutableStateFlow(false)
     val showDatePicker: StateFlow<Boolean> get() = _showDatePicker
@@ -39,9 +56,6 @@ class MainViewModel @Inject constructor(
 
     private val _navTo = MutableStateFlow(Pair(false, Any()))
     val navTo: StateFlow<Pair<Boolean, Any>> get() = _navTo
-
-    private val _nameUser = MutableStateFlow("")
-    val nameUser: StateFlow<String> get() = _nameUser
 
     private val _showLoading = MutableStateFlow(false)
     val showLoading: StateFlow<Boolean> get() = _showLoading
@@ -172,5 +186,33 @@ class MainViewModel @Inject constructor(
 
     fun updateFecha(fecha: String) {
         _fecha.value = fecha
+    }
+
+    fun configScreen(
+        @StringRes title: Int,
+        showActions: Boolean = true,
+        showBottomNav : Boolean = true
+    ) {
+        _title.value = title
+        _showActions.value = showActions
+        _showBottomNav.value = showBottomNav
+    }
+
+    fun updateUserName(name: String) {
+        _userName.value = name
+        viewModelScope.launch {
+            saveUserName(name)
+            getUserName().collect {
+                if (it != name) _userName.value = it
+            }
+        }
+    }
+
+    fun getUser() {
+        viewModelScope.launch {
+            getUserName().collect {
+                _userName.value = it
+            }
+        }
     }
 }

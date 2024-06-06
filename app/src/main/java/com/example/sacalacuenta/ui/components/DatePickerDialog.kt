@@ -1,5 +1,6 @@
 package com.example.sacalacuenta.ui.components
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.UiMode
 import com.example.sacalacuenta.R
 import com.example.sacalacuenta.ui.theme.SacaLaCuentaTheme
 import com.example.sacalacuenta.utils.Utils
@@ -64,7 +66,7 @@ fun DatePickerDialog(
 
     DatePickerDialog(
         modifier = modifier,
-        onDismissRequest = { onDismiss() },
+        onDismissRequest = onDismiss,
         confirmButton = {
             Button(
                 onClick = { onDateSelected(selectedDate) },
@@ -84,28 +86,9 @@ fun DatePickerDialog(
             ) {
                 Text(text = stringResource(id = R.string.cancel))
             }
-        },
-        colors = DatePickerDefaults.colors(
-            containerColor = Color.White
-        )
+        }
     ) {
         DatePicker(
-            /*            colors = DatePickerDefaults.colors(
-                            containerColor = Color.White,
-                            currentYearContentColor = MaterialTheme.colorScheme.primary,
-                            selectedYearContainerColor = MaterialTheme.colorScheme.primary,
-                            yearContentColor = MaterialTheme.colorScheme.secondary,
-
-                            selectedDayContainerColor = MaterialTheme.colorScheme.primary,
-                            todayContentColor = MaterialTheme.colorScheme.primary,
-                            todayDateBorderColor = MaterialTheme.colorScheme.primary,
-
-                            dateTextFieldColors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                                cursorColor = MaterialTheme.colorScheme.primary,
-                                focusedLabelColor = MaterialTheme.colorScheme.primary
-                            )
-                        ),*/
             state = datePickerState
         )
     }
@@ -117,7 +100,7 @@ private fun convertMillisToDate(millis: Long): String {
     return formatter.format(Date(Utils.convertUtcToLocal(millis)))
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun MyDatePickerDialogPreview() {
     SacaLaCuentaTheme {

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.example.sacalacuenta.R
@@ -17,10 +18,14 @@ class CuentaPreferences(context: Context) {
     }
 
     companion object {
-        val NAME_USER_KEY = stringPreferencesKey("name_user_key")
+        val USER_NAME_KEY = stringPreferencesKey("user_name_key")
     }
 
-    fun getNameUser(): Flow<String> {
-        return dataStore.data.map { prefs -> prefs[NAME_USER_KEY].orEmpty() }
+    fun getUserName(): Flow<String> {
+        return dataStore.data.map { prefs -> prefs[USER_NAME_KEY].orEmpty() }
+    }
+
+    suspend fun saveUserName(userName: String) {
+        dataStore.edit { prefs -> prefs[USER_NAME_KEY] = userName }
     }
 }

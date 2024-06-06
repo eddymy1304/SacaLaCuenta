@@ -26,4 +26,7 @@
     <string name="title_export_to_csv">Exportar cuentas</string>
     <string name="message_export_to_csv">¿Desea exportar las cuentas a un archivo CSV</string>
     <string name="settings">Configuración</string>
+    <string name="nombre_del_usuario">Nombre del usuario</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="cancelar">Cancelar</string>
 </resources>

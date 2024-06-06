@@ -46,6 +46,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.sacalacuenta.MainViewModel
 import com.example.sacalacuenta.R
+import com.example.sacalacuenta.data.models.Screen.*
 import com.example.sacalacuenta.ui.components.DetalleCuentaCard
 import com.example.sacalacuenta.ui.components.MenuMetodoPago
 import com.example.sacalacuenta.ui.components.MySimpleLoading
@@ -59,6 +60,9 @@ fun CuentaScreen(
     navController: NavHostController,
     viewModel: MainViewModel
 ) {
+
+    LaunchedEffect(Unit) { viewModel.configScreen(ScreenCuenta.title) }
+
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
@@ -227,7 +231,7 @@ fun CuentaScreen(
     }
 
     AnimatedVisibility(visible = showLoading) {
-        MySimpleLoading {}
+        MySimpleLoading()
     }
 
     DisposableEffect(navTo) {

@@ -1,13 +1,17 @@
 package com.example.sacalacuenta.ui.screens
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.createChooser
 import android.graphics.Bitmap
-import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,11 +25,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
@@ -40,20 +49,23 @@ import androidx.navigation.NavHostController
 import com.example.sacalacuenta.MainViewModel
 import com.example.sacalacuenta.R
 import com.example.sacalacuenta.data.models.DetalleCuentaView
+import com.example.sacalacuenta.data.models.Screen.*
 import com.example.sacalacuenta.ui.components.CabListDetTicket
 import com.example.sacalacuenta.ui.components.ItemTicket
 import com.example.sacalacuenta.ui.theme.SacaLaCuentaTheme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
-import java.io.File
-import kotlin.coroutines.resume
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun TicketScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     viewModel: MainViewModel
 ) {
+
+    LaunchedEffect(Unit) { viewModel.configScreen(ScreenTicket.title) }
+
     val cuentaWithDetalle by viewModel.cuentaWithDetalle.collectAsState()
 
     Log.d("TicketScreen", "cuentaWithCuenta: $cuentaWithDetalle")
@@ -62,10 +74,16 @@ fun TicketScreen(
     val scope = rememberCoroutineScope()
     val graphicsLayer = rememberGraphicsLayer()
 
+    var background by remember { mutableStateOf(Color.Transparent) }
+    var textColor by remember { mutableStateOf(Color.Unspecified) }
+
     TicketScreen(
+        background = background,
+        textColor = textColor,
         modifier = modifier
             .drawWithContent {
                 graphicsLayer.record {
+
                     this@drawWithContent.drawContent()
                 }
                 drawLayer(graphicsLayer)
@@ -75,9 +93,17 @@ fun TicketScreen(
         textDate = cuentaWithDetalle.cuenta.dateTime.orEmpty(),
         textTotal = cuentaWithDetalle.cuenta.total.value ?: 0.0,
         listDet = cuentaWithDetalle.listDetCuenta,
-        onClickIconHome = { navController.navigateUp() },
+        onClickIconHome = {
+            navController.popBackStack()
+            navController.navigate(ScreenCuenta)
+        },
         onClickIconShare = {
+            background = Color.White
+            textColor = Color.Black
             scope.launch {
+                delay(1000)
+                background = Color.Transparent
+                textColor = Color.Unspecified
                 val bitmap = graphicsLayer.toImageBitmap()
                 val uri = bitmap.asAndroidBitmap().saveToDisk(context)
                 shareBitmap(context, uri)
@@ -89,6 +115,8 @@ fun TicketScreen(
 @Composable
 fun TicketScreen(
     modifier: Modifier = Modifier,
+    background: Color,
+    textColor: Color = Color.Unspecified,
     textTitle: String = "",
     textPaymentMethod: String = "",
     textDate: String = "",
@@ -98,7 +126,7 @@ fun TicketScreen(
     onClickIconHome: () -> Unit = {}
 ) {
 
-    ConstraintLayout(modifier = modifier) {
+    ConstraintLayout(modifier = modifier.background(background)) {
         val (image, title, method, cab, list, total, date, div1, div2, iconShare, iconHome) = createRefs()
 
         Icon(
@@ -115,6 +143,7 @@ fun TicketScreen(
         )
 
         Text(
+            color = textColor,
             text = stringResource(id = R.string.text_nombre, textTitle),
             modifier = Modifier.constrainAs(title) {
                 top.linkTo(image.bottom, margin = 8.dp)
@@ -124,6 +153,7 @@ fun TicketScreen(
             })
 
         Text(
+            color = textColor,
             text = stringResource(id = R.string.text_metodo_pago, textPaymentMethod),
             modifier = Modifier.constrainAs(method) {
                 top.linkTo(title.bottom, margin = 8.dp)
@@ -134,6 +164,7 @@ fun TicketScreen(
         )
 
         Text(
+            color = textColor,
             text = stringResource(id = R.string.text_fecha, textDate),
             modifier = Modifier.constrainAs(date) {
                 top.linkTo(method.bottom, margin = 8.dp)
@@ -143,12 +174,14 @@ fun TicketScreen(
             }
         )
 
-        CabListDetTicket(modifier = Modifier.constrainAs(cab) {
-            top.linkTo(date.bottom, margin = 8.dp)
-            start.linkTo(parent.start, margin = 16.dp)
-            end.linkTo(parent.end, margin = 16.dp)
-            width = Dimension.matchParent
-        })
+        CabListDetTicket(
+            textColor = textColor,
+            modifier = Modifier.constrainAs(cab) {
+                top.linkTo(date.bottom, margin = 8.dp)
+                start.linkTo(parent.start, margin = 16.dp)
+                end.linkTo(parent.end, margin = 16.dp)
+                width = Dimension.matchParent
+            })
 
         HorizontalDivider(Modifier.constrainAs(div1) {
             top.linkTo(cab.bottom)
@@ -166,7 +199,10 @@ fun TicketScreen(
             height = Dimension.fillToConstraints
         }) {
             items(listDet) {
-                ItemTicket(det = it)
+                ItemTicket(
+                    textColor = textColor,
+                    det = it
+                )
             }
         }
 
@@ -178,6 +214,7 @@ fun TicketScreen(
         })
 
         Text(
+            color = textColor,
             text = stringResource(id = R.string.text_total_cuenta, textTotal),
             modifier = Modifier.constrainAs(total) {
                 top.linkTo(div2.bottom, margin = 8.dp)
@@ -222,44 +259,46 @@ fun TicketScreen(
 fun PreviewTicketScreen() {
     SacaLaCuentaTheme {
         TicketScreen(
+            background = Color.Transparent,
             modifier = Modifier.fillMaxSize(),
         )
     }
 }
 
-private suspend fun Bitmap.saveToDisk(context: Context): Uri {
-    val file = File(
-        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-        "screenshot-${System.currentTimeMillis()}.png"
+private fun Bitmap.saveToDisk(context: Context): Uri {
+
+    val filename = "screenshot-${System.currentTimeMillis()}.png"
+
+    val uri = createImageUri(context, filename)
+        ?: throw Exception("Failed to create new MediaStore record.")
+
+    saveBitmapToUri(context, this, uri)
+
+    Log.d("Eddycito", "saveToDisk: $uri")
+
+    return uri
+}
+
+// Función para crear un Uri en MediaStore
+private fun createImageUri(context: Context, filename: String): Uri? {
+    val contentValues = ContentValues().apply {
+        put(MediaStore.Images.Media.DISPLAY_NAME, filename)
+        put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+        put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+    }
+    return context.contentResolver.insert(
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+        contentValues
     )
-
-    file.writeBitmap(this, Bitmap.CompressFormat.PNG, 100)
-
-    return scanFilePath(context, file.path) ?: throw Exception("File could not be saved")
 }
 
-/**
- * We call [MediaScannerConnection] to index the newly created image inside MediaStore to be visible
- * for other apps, as well as returning its MediaStore Uri
- */
-private suspend fun scanFilePath(context: Context, filePath: String): Uri? {
-    return suspendCancellableCoroutine { continuation ->
-        MediaScannerConnection.scanFile(
-            context,
-            arrayOf(filePath),
-            arrayOf("image/png")
-        ) { _, scannedUri ->
-            if (scannedUri == null) continuation.cancel(Exception("File $filePath could not be scanned"))
-            else continuation.resume(scannedUri)
+// Función para guardar el bitmap en el archivo usando el Uri
+private fun saveBitmapToUri(context: Context, bitmap: Bitmap, uri: Uri) {
+    context.contentResolver.openOutputStream(uri)?.use { outputStream ->
+        if (!bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)) {
+            throw Exception("Failed to save bitmap.")
         }
-    }
-}
-
-private fun File.writeBitmap(bitmap: Bitmap, format: Bitmap.CompressFormat, quality: Int) {
-    outputStream().use { out ->
-        bitmap.compress(format, quality, out)
-        out.flush()
-    }
+    } ?: throw Exception("Failed to open output stream.")
 }
 
 private fun shareBitmap(context: Context, uri: Uri) {

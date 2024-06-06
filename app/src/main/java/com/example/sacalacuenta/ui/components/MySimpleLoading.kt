@@ -11,7 +11,7 @@ import com.example.sacalacuenta.ui.theme.SacaLaCuentaTheme
 @Composable
 fun MySimpleLoading(
     modifier: Modifier = Modifier,
-    onDismis: () -> Unit
+    onDismis: () -> Unit = {}
 ) {
     Dialog(onDismissRequest = onDismis) {
         CircularProgressIndicator(modifier = modifier)

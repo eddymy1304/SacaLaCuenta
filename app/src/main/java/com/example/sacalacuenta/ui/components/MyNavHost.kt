@@ -8,9 +8,11 @@ import androidx.navigation.compose.composable
 import com.example.sacalacuenta.MainViewModel
 import com.example.sacalacuenta.data.models.Screen.ScreenCuenta
 import com.example.sacalacuenta.data.models.Screen.ScreenHistorial
+import com.example.sacalacuenta.data.models.Screen.ScreenSettings
 import com.example.sacalacuenta.data.models.Screen.ScreenTicket
 import com.example.sacalacuenta.ui.screens.CuentaScreen
 import com.example.sacalacuenta.ui.screens.HistorialScreen
+import com.example.sacalacuenta.ui.screens.SettingsScreen
 import com.example.sacalacuenta.ui.screens.TicketScreen
 
 @Composable
@@ -35,6 +37,10 @@ fun MyNavHost(
 
         composable<ScreenTicket> {
             TicketScreen(navController = navController, viewModel = viewModel)
+        }
+
+        composable<ScreenSettings> {
+            SettingsScreen(navController = navController, viewModel = viewModel)
         }
     }
 }

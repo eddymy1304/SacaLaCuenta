@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,10 +18,12 @@ import com.example.sacalacuenta.ui.theme.SacaLaCuentaTheme
 @Composable
 fun ItemTicket(
     modifier: Modifier = Modifier,
-    det: DetalleCuentaView
+    det: DetalleCuentaView,
+    textColor: Color = Color.Unspecified
 ) {
     Row(modifier) {
         Text(
+            color = textColor,
             modifier = Modifier
                 .weight(4f)
                 .padding(horizontal = 4.dp),
@@ -28,6 +31,7 @@ fun ItemTicket(
             textAlign = TextAlign.Start
         )
         Text(
+            color = textColor,
             modifier = Modifier
                 .weight(2f)
                 .padding(horizontal = 4.dp),
@@ -39,6 +43,7 @@ fun ItemTicket(
             textAlign = TextAlign.End
         )
         Text(
+            color = textColor,
             modifier = Modifier
                 .weight(2f)
                 .padding(horizontal = 4.dp),
@@ -50,6 +55,7 @@ fun ItemTicket(
             textAlign = TextAlign.End
         )
         Text(
+            color = textColor,
             modifier = Modifier
                 .weight(2f)
                 .padding(horizontal = 4.dp),

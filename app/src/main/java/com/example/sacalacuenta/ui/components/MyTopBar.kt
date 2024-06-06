@@ -1,5 +1,6 @@
 package com.example.sacalacuenta.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -23,6 +24,7 @@ fun MyTopBar(
     title: String = "",
     subTitle: String = "",
     showIconNav: Boolean = false,
+    showActions: Boolean = true,
     onClickAction: () -> Unit,
     onClickNav: () -> Unit,
 ) {
@@ -35,7 +37,7 @@ fun MyTopBar(
             }
         },
         navigationIcon = {
-            if (showIconNav) {
+            AnimatedVisibility(visible = showIconNav) {
                 IconButton(onClick = onClickNav) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
@@ -45,12 +47,14 @@ fun MyTopBar(
             }
         },
         actions = {
-            IconButton(onClick = {}) {
-                Icon(
-                    tint = MaterialTheme.colorScheme.primary,
-                    imageVector = Icons.Outlined.Settings,
-                    contentDescription = null
-                )
+            AnimatedVisibility(visible = showActions) {
+                IconButton(onClick = onClickAction) {
+                    Icon(
+                        tint = MaterialTheme.colorScheme.primary,
+                        imageVector = Icons.Outlined.Settings,
+                        contentDescription = null
+                    )
+                }
             }
         }
     )

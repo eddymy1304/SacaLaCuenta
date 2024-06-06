@@ -1,20 +1,21 @@
 package com.example.sacalacuenta.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.sacalacuenta.MainViewModel
 import com.example.sacalacuenta.R
-import com.example.sacalacuenta.data.models.Screen.ScreenCuenta
+import com.example.sacalacuenta.data.models.Screen.*
 import com.example.sacalacuenta.data.models.getListItemsBottomNav
 import com.example.sacalacuenta.ui.components.MyBottomBar
 import com.example.sacalacuenta.ui.components.MyNavHost
@@ -28,33 +29,43 @@ fun MainScreen(
     finished: () -> Unit
 ) {
 
-    val nameUser by viewModel.nameUser.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.getUser()
+    }
+
+    val userName by viewModel.userName.collectAsState()
+
+    val title by viewModel.title.collectAsState()
+
+    val showActions by viewModel.showActions.collectAsState()
+
+    val showBottomNav by viewModel.showBottomNav.collectAsState()
 
     val navController = rememberNavController()
-
-    val backstackEntry by navController.currentBackStackEntryAsState()
 
     Scaffold(
         modifier = modifier,
         topBar = {
-
-            val currentRoute = backstackEntry?.destination?.route
-
             MyTopBar(
-                title = stringResource(id = R.string.app_name),
-                subTitle = if (nameUser.isNotBlank()) stringResource(
+                title = stringResource(id = title),
+                subTitle = if (userName.isNotBlank()) stringResource(
                     id = R.string.sub_title,
-                    nameUser
+                    userName
                 )
                 else stringResource(id = R.string.sub_title_with_out),
-                showIconNav = currentRoute != ScreenCuenta::class.qualifiedName,
-                onClickAction = { navController.navigate(ScreenCuenta) }
+                showActions = showActions,
+                showIconNav = navController.currentDestination?.route != ScreenCuenta::class.qualifiedName,
+                onClickAction = { navController.navigate(ScreenSettings) }
             ) {
-                if (currentRoute == ScreenCuenta::class.qualifiedName) finished()
+                if (navController.currentDestination?.route == ScreenCuenta::class.qualifiedName) finished()
                 else navController.navigateUp()
             }
         },
-        bottomBar = { MyBottomBar(navController = navController, items = getListItemsBottomNav()) }
+        bottomBar = {
+            AnimatedVisibility(visible = showBottomNav) {
+                MyBottomBar(navController = navController, items = getListItemsBottomNav())
+            }
+        }
     ) {
         MyNavHost(
             modifier = Modifier
