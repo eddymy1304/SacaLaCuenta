@@ -11,11 +11,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.sacalacuenta"
+    namespace = "com.eddymy1304.sacalacuenta"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.sacalacuenta"
+        applicationId = "com.eddymy1304.sacalacuenta"
         minSdk = 29
         targetSdk = 34
         versionCode = 1
