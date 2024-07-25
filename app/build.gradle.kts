@@ -11,17 +11,17 @@ plugins {
 }
 
 android {
-    namespace = "com.eddymy1304.sacalacuenta"
-    compileSdk = 34
+    namespace = Configuration.NAME_SPACE
+    compileSdk = Configuration.COMPILE_SDK
 
     defaultConfig {
-        applicationId = "com.eddymy1304.sacalacuenta"
-        minSdk = 29
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        applicationId = Configuration.APPLICATION_ID
+        minSdk = Configuration.MIN_SDK
+        targetSdk = Configuration.TARGET_SDK
+        versionCode = Configuration.VERSION_CODE
+        versionName = Configuration.VERSION_NAME
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = Configuration.TEST_INSTRUMENTATION_RUNNER
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -29,6 +29,17 @@ android {
 
     buildTypes {
         release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+
+        debug {
+            isDebuggable = true
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
