@@ -1,26 +1,27 @@
 [versions]
 agp = "8.7.0-alpha07"
+android-tools = "31.5.2"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
 kotlinxSerializationJsonVersion = "1.6.3"
-lifecycle = "2.8.1"
-activityCompose = "1.9.0"
-composeBom = "2024.05.00"
-compose-compiler = "1.5.14"
-compose-latest = "1.7.0-beta02"
+lifecycle = "2.8.4"
+activityCompose = "1.9.1"
+composeBom = "2024.08.00"
+compose-compiler = "1.5.15"
+compose-latest = "1.7.0-rc01"
 hilt = "2.51.1"
 datastore = "1.1.1"
 room = "2.6.1"
 hilt-navigation = "1.2.0"
 
-navigation-compose = "2.8.0-beta02"
+navigation-compose = "2.8.0-rc01"
 
 constraintlayout-compose = "1.0.1"
 
-ui-version = "1.6.7"
+ui-version = "1.6.8"
 
 accompanist-version = "0.35.0-alpha"
 
@@ -70,6 +71,12 @@ androidx-constraintlayout-compose = { group = "androidx.constraintlayout", name 
 
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist-version" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJsonVersion" }
+
+
+# Dependencies of the included build-logic
+android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+android-tools-common = { group = "com.android.tools", name = "common", version.ref = "android-tools" }
+kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 
 [plugins]
 devtools-ksp = {id = "com.google.devtools.ksp", version.ref = "devtools"}
