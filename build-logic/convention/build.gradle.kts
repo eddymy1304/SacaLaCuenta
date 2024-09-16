@@ -18,6 +18,7 @@ kotlin {
 }
 
 dependencies {
+    compileOnly(libs.compose.compiler.gradlePlugin)
     compileOnly(libs.android.gradle.plugin)
     compileOnly(libs.android.tools.common)
     compileOnly(libs.kotlin.gradle.plugin)
@@ -40,9 +41,19 @@ gradlePlugin {
             implementationClass = "AndroidTestConventionPlugin"
         }
 
-        register("compose") {
-            id = "sacalacuenta.compose"
-            implementationClass = "ComposeConventionPlugin"
+        register("androidApplicationCompose") {
+            id = "sacalacuenta.android.application.compose"
+            implementationClass = "AndroidApplicationComposeConventionPlugin"
+        }
+
+        register("androidLibraryCompose") {
+            id = "sacalacuenta.android.library.compose"
+            implementationClass = "AndroidLibraryComposeConventionPlugin"
+        }
+
+        register("androidHilt") {
+            id= "sacalacuenta.android.hilt"
+            implementationClass = "AndroidHiltConventionPlugin"
         }
     }
 }

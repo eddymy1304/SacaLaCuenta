@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.0-alpha07"
+agp = "8.8.0-alpha02"
 android-tools = "31.5.2"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
@@ -49,13 +49,13 @@ androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 
 androidx-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 
 dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+dagger-hilt-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
 
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 androidx-datastore-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
@@ -78,6 +78,9 @@ android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", ve
 android-tools-common = { group = "com.android.tools", name = "common", version.ref = "android-tools" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 
+
+compose-compiler-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
+
 [plugins]
 devtools-ksp = {id = "com.google.devtools.ksp", version.ref = "devtools"}
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -85,5 +88,12 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 room = { id = "androidx.room", version.ref = "room" }
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+sacalacuenta-android-application = { id = "sacalacuenta.android.application", version = "unspecified" }
+sacalacuenta-android-library = { id = "sacalacuenta.android.library", version = "unspecified" }
+sacalacuenta-android-test = { id = "sacalacuenta.android.test", version = "unspecified" }
+sacalacuenta-android-application-compose = {id = "sacalacuenta.android.application.compose", version = "unspecified"}
+sacalacuenta-android-library-compose = {id = "sacalacuenta.android.library.compose", version = "unspecified"}
+sacalacuenta-android-hilt = { id = "sacalacuenta.android.hilt", version = "unspecified"}

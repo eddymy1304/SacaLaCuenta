@@ -12,7 +12,6 @@ internal fun Project.configureKotlinAndroid(
 
         defaultConfig {
             minSdk = 26
-            //testInstrumentationRunner = "com.eddymy1304.sacalacuenta.testing.HiltTestRunner"
         }
 
         compileOptions {

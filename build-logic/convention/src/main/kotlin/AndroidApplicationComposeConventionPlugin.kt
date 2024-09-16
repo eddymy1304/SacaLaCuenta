@@ -1,13 +1,14 @@
-import com.android.build.gradle.BaseExtension
+import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.eddymy1304.sacalacuenta.configureCompose
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByType
 
-class ComposeConventionPlugin : Plugin<Project> {
+class AndroidApplicationComposeConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            val extension = extensions.getByType<BaseExtension>()
+            pluginManager.apply("com.android.application")
+            val extension = extensions.getByType<BaseAppModuleExtension>()
             configureCompose(extension)
         }
     }
