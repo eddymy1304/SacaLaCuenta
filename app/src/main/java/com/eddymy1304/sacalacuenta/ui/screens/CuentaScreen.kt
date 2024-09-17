@@ -25,11 +25,13 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -52,6 +54,7 @@ import com.eddymy1304.sacalacuenta.ui.components.MenuMetodoPago
 import com.eddymy1304.sacalacuenta.ui.components.MySimpleLoading
 import com.eddymy1304.sacalacuenta.ui.components.getItemsMetodoPago
 import com.eddymy1304.sacalacuenta.ui.theme.SacaLaCuentaTheme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -77,6 +80,8 @@ fun CuentaScreen(
     val maxLenghTitle = 20
 
     var openMetodoPago by remember { mutableStateOf(false) }
+
+    val listFocus = remember { mutableStateListOf(FocusRequester()) }
 
     Log.d(
         "CuentaScreen", """
@@ -207,9 +212,11 @@ fun CuentaScreen(
             itemsIndexed(listDetCuenta) { position, det ->
                 DetalleCuentaCard(
                     position = position + 1,
+                    focusRequester = listFocus[position],
                     det = det,
                     onValueChangeProduct = { viewModel.updateTotal() },
                 ) {
+                    listFocus.remove(listFocus.last())
                     viewModel.deleteDetalleCuenta(det)
                 }
             }
@@ -221,9 +228,12 @@ fun CuentaScreen(
                 end.linkTo(parent.end, margin = 8.dp)
             },
             onClick = {
+                listFocus.add(FocusRequester())
                 viewModel.addDetalleCuenta()
                 scope.launch {
-                    listState.animateScrollToItem(listDetCuenta.size - 1)
+                    val lastIndex = listDetCuenta.size - 1
+                    listState.animateScrollToItem(lastIndex)
+                    listFocus.last().requestFocus()
                 }
             }) {
             Icon(imageVector = Icons.Outlined.Add, contentDescription = null)

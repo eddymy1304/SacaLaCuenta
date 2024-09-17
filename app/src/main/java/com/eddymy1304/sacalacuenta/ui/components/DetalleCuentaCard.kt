@@ -20,8 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +41,7 @@ import java.util.regex.Pattern
 @Composable
 fun DetalleCuentaCard(
     modifier: Modifier = Modifier,
+    focusRequester: FocusRequester,
     position: Int,
     det: DetalleCuentaView,
     onValueChangeProduct: () -> Unit,
@@ -81,13 +85,18 @@ fun DetalleCuentaCard(
                         start.linkTo(number.end)
                         top.linkTo(parent.top, margin = 8.dp)
                         width = Dimension.value(200.dp)
-                    },
+                    }
+                    .focusRequester(focusRequester)
+                ,
                 label = {
                     Text(text = stringResource(id = R.string.label_title_producto))
                 },
                 textStyle = LocalTextStyle.current.copy(
                     textAlign = TextAlign.Center,
                     fontSize = 24.sp,
+                ),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Next
                 )
             )
 
@@ -316,6 +325,7 @@ fun PreviewDetalleCard() {
                 },
             ),
             position = 2,
+            focusRequester = remember { FocusRequester() },
             onValueChangeProduct = {},
             onClickDelete = {},
         )
