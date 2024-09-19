@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.internal.Kapt3GradleSubplugin.Companion.isIncludeCompileClasspath
+
 plugins {
     alias(libs.plugins.sacalacuenta.android.application)
     alias(libs.plugins.sacalacuenta.android.application.compose)
@@ -77,6 +79,7 @@ dependencies {
     implementation(libs.androidx.ui.unit)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.compose.ui.fonts)
     implementation(libs.androidx.material3)
 
     testImplementation(libs.junit)

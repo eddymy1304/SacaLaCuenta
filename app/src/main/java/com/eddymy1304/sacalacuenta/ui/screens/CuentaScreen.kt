@@ -48,13 +48,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.eddymy1304.sacalacuenta.MainViewModel
 import com.eddymy1304.sacalacuenta.R
-import com.eddymy1304.sacalacuenta.data.models.Screen.*
+import com.eddymy1304.sacalacuenta.data.models.Screen.ScreenCuenta
 import com.eddymy1304.sacalacuenta.ui.components.DetalleCuentaCard
 import com.eddymy1304.sacalacuenta.ui.components.MenuMetodoPago
 import com.eddymy1304.sacalacuenta.ui.components.MySimpleLoading
 import com.eddymy1304.sacalacuenta.ui.components.getItemsMetodoPago
 import com.eddymy1304.sacalacuenta.ui.theme.SacaLaCuentaTheme
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -216,8 +215,9 @@ fun CuentaScreen(
                     det = det,
                     onValueChangeProduct = { viewModel.updateTotal() },
                 ) {
-                    listFocus.remove(listFocus.last())
+                    listFocus.remove(listFocus[position])
                     viewModel.deleteDetalleCuenta(det)
+                    viewModel.updateTotal()
                 }
             }
         }
