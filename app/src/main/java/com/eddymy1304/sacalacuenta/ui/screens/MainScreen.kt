@@ -29,9 +29,7 @@ fun MainScreen(
     finished: () -> Unit
 ) {
 
-    LaunchedEffect(Unit) {
-        viewModel.getUser()
-    }
+    LaunchedEffect(Unit) { viewModel.getUser() }
 
     val userName by viewModel.userName.collectAsState()
 

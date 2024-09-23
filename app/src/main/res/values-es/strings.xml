@@ -29,4 +29,6 @@
     <string name="nombre_del_usuario">Nombre del usuario</string>
     <string name="aceptar">Aceptar</string>
     <string name="cancelar">Cancelar</string>
+    <string name="permission_denied" translatable="true">permiso denegado. \nActivar permisos en la configuración de app</string>
+    <string name="message_dialog_permission_rationale" translatable="true">El app necesita los permisos para compartir la imagen del ticket.</string>
 </resources>

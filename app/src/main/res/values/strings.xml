@@ -36,6 +36,8 @@
     <string name="nombre_del_usuario">User name</string>
     <string name="aceptar">Accept</string>
     <string name="cancelar">Cancel</string>
+    <string name="permission_denied" translatable="true">Permission denied. \nEnable permissions in app settings.</string>
+    <string name="message_dialog_permission_rationale" translatable="true">The app needs permissions to share the ticket image.</string>
 
     <array name="com_google_android_gms_fonts_certs">
         <item>@array/com_google_android_gms_fonts_certs_dev</item>

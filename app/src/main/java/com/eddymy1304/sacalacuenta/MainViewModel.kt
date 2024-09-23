@@ -72,6 +72,9 @@ class MainViewModel @Inject constructor(
     private val _total = MutableStateFlow(0.0)
     val total: StateFlow<Double> get() = _total
 
+    var showDialogPermissionRationale = MutableStateFlow(false)
+        private set
+
     init {
         Log.d("Eddycito", "MainViewModel init")
     }
@@ -191,7 +194,7 @@ class MainViewModel @Inject constructor(
     fun configScreen(
         @StringRes title: Int,
         showActions: Boolean = true,
-        showBottomNav : Boolean = true
+        showBottomNav: Boolean = true
     ) {
         _title.value = title
         _showActions.value = showActions
@@ -214,5 +217,9 @@ class MainViewModel @Inject constructor(
                 _userName.value = it
             }
         }
+    }
+
+    fun updateShowDialogPermissionRationale(show: Boolean) {
+        showDialogPermissionRationale.value = show
     }
 }

@@ -1,5 +1,6 @@
 package com.eddymy1304.sacalacuenta.ui.screens
 
+import android.Manifest
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -10,7 +11,8 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import androidx.annotation.RequiresApi
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,11 +21,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.LocalGroceryStore
 import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material.icons.outlined.Warning
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -49,14 +54,19 @@ import androidx.navigation.NavHostController
 import com.eddymy1304.sacalacuenta.MainViewModel
 import com.eddymy1304.sacalacuenta.R
 import com.eddymy1304.sacalacuenta.data.models.DetalleCuentaView
-import com.eddymy1304.sacalacuenta.data.models.Screen.*
+import com.eddymy1304.sacalacuenta.data.models.Screen.ScreenCuenta
+import com.eddymy1304.sacalacuenta.data.models.Screen.ScreenTicket
 import com.eddymy1304.sacalacuenta.ui.components.CabListDetTicket
 import com.eddymy1304.sacalacuenta.ui.components.ItemTicket
 import com.eddymy1304.sacalacuenta.ui.theme.SacaLaCuentaTheme
+import com.eddymy1304.sacalacuenta.utils.UiText
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.File
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun TicketScreen(
     modifier: Modifier = Modifier,
@@ -76,6 +86,56 @@ fun TicketScreen(
 
     var background by remember { mutableStateOf(Color.Transparent) }
     var textColor by remember { mutableStateOf(Color.Unspecified) }
+
+    val showDialog by viewModel.showDialogPermissionRationale.collectAsState()
+
+    val listPermissions = listOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+
+    val permissionsState = rememberMultiplePermissionsState(listPermissions)
+
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { granteds ->
+        if (granteds.all { it.value }) {
+            background = Color.White
+            textColor = Color.Black
+            scope.launch {
+                delay(1000)
+                background = Color.Transparent
+                textColor = Color.Unspecified
+                val bitmap = graphicsLayer.toImageBitmap()
+                val uri = bitmap.asAndroidBitmap().saveToDisk(context)
+                shareBitmap(context, uri)
+            }
+        } else {
+            viewModel.updateMessage(UiText.StringResource(R.string.permission_denied))
+        }
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            icon = {
+                Icon(imageVector = Icons.Outlined.Warning, contentDescription = null)
+            },
+            text = {
+                Text(stringResource(R.string.message_dialog_permission_rationale))
+            },
+            onDismissRequest = {},
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.updateShowDialogPermissionRationale(false)
+                        requestPermissionLauncher.launch(listPermissions.toTypedArray())
+                    }
+                ) {
+                    Text(text = stringResource(R.string.aceptar))
+                }
+            }
+        )
+    }
 
     TicketScreen(
         background = background,
@@ -98,15 +158,25 @@ fun TicketScreen(
             navController.navigate(ScreenCuenta)
         },
         onClickIconShare = {
-            background = Color.White
-            textColor = Color.Black
-            scope.launch {
-                delay(1000)
-                background = Color.Transparent
-                textColor = Color.Unspecified
-                val bitmap = graphicsLayer.toImageBitmap()
-                val uri = bitmap.asAndroidBitmap().saveToDisk(context)
-                shareBitmap(context, uri)
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+
+                if (!permissionsState.allPermissionsGranted && permissionsState.shouldShowRationale)
+                    viewModel.updateShowDialogPermissionRationale(true)
+                else requestPermissionLauncher.launch(listPermissions.toTypedArray())
+
+            } else {
+
+                background = Color.White
+                textColor = Color.Black
+                scope.launch {
+                    delay(1000)
+                    background = Color.Transparent
+                    textColor = Color.Unspecified
+                    val bitmap = graphicsLayer.toImageBitmap()
+                    val uri = bitmap.asAndroidBitmap().saveToDisk(context)
+                    shareBitmap(context, uri)
+                }
+
             }
         }
     )
@@ -284,7 +354,18 @@ private fun createImageUri(context: Context, filename: String): Uri? {
     val contentValues = ContentValues().apply {
         put(MediaStore.Images.Media.DISPLAY_NAME, filename)
         put(MediaStore.Images.Media.MIME_TYPE, "image/png")
-        put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+        //put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // Usamos RELATIVE_PATH solo en dispositivos con API 29 o superior
+            put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+        } else {
+            // Para dispositivos con API menor a 29
+            val picturesDir =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).path
+            val file = File(picturesDir, filename)
+            put(MediaStore.Images.Media.DATA, file.absolutePath)
+        }
     }
     return context.contentResolver.insert(
         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,

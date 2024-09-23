@@ -23,7 +23,7 @@ constraintlayout-compose = "1.0.1"
 
 ui-version = "1.7.2"
 
-accompanist-version = "0.35.0-alpha"
+accompanist-version = "0.36.0"
 
 devtools = "2.0.0-1.0.21"
 
