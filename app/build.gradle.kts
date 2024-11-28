@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.internal.Kapt3GradleSubplugin.Companion.isIncludeCompileClasspath
 
 plugins {
     alias(libs.plugins.sacalacuenta.android.application)

@@ -8,6 +8,7 @@ import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 
 internal fun Project.configureCompose(
     commonExtension: CommonExtension<*, *, *, *, *, *>
@@ -31,7 +32,13 @@ internal fun Project.configureCompose(
     }
 
     extensions.configure<ComposeCompilerGradlePluginExtension> {
-        enableStrongSkippingMode = true
+        //enableStrongSkippingMode = true
+        featureFlags = setOf(
+            //ComposeFeatureFlag.IntrinsicRemember.disabled(),
+            ComposeFeatureFlag.OptimizeNonSkippingGroups,
+            //ComposeFeatureFlag.StrongSkipping
+        )
+
         reportsDestination = layout.buildDirectory.dir("compose_compiler")
     }
 }

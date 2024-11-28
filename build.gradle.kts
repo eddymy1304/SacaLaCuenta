@@ -15,9 +15,8 @@ plugins {
     alias(libs.plugins.devtools.ksp) apply false
     alias(libs.plugins.room) apply false
 
-    kotlin("jvm") version "2.0.0"
-    kotlin("plugin.serialization") version "2.0.0"
-
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
 
     alias(libs.plugins.sacalacuenta.android.application) apply false
     alias(libs.plugins.sacalacuenta.android.library) apply false
