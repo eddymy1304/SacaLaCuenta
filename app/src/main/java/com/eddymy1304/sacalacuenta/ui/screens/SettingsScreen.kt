@@ -20,54 +20,48 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.eddymy1304.sacalacuenta.MainViewModel
 import com.eddymy1304.sacalacuenta.R
-import com.eddymy1304.sacalacuenta.data.models.Screen.*
-import com.eddymy1304.sacalacuenta.ui.components.DialogTextfield
+import com.eddymy1304.sacalacuenta.ui.components.DialogTextField
 import com.eddymy1304.sacalacuenta.ui.theme.SacaLaCuentaTheme
 
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    viewModel: MainViewModel
+    viewModel: SettingsViewModel = hiltViewModel(),
+    configScreen: () -> Unit
 ) {
+
+    LaunchedEffect(Unit) { configScreen() }
 
     val userName by viewModel.userName.collectAsState()
 
-    var showDialog by remember { mutableStateOf(false) }
+    val showDialog by viewModel.showDialog.collectAsState()
 
     var name by remember { mutableStateOf(userName) }
-
-    LaunchedEffect(Unit) {
-        viewModel.configScreen(
-            title = ScreenSettings.title,
-            showActions = false,
-            showBottomNav = false
-        )
-    }
 
     SettingsScreen(
         modifier = modifier,
         userName = userName,
-        onClickNombreUsuario = { showDialog = true }
+        onClickUserName = { viewModel.setShowDialog(true) }
     )
 
     AnimatedVisibility(visible = showDialog) {
-        DialogTextfield(
+        DialogTextField(
             title = stringResource(R.string.nombre_del_usuario),
             text = name,
             onDismissRequest = {
-                showDialog = false
+                viewModel.setShowDialog(false)
                 name = ""
             },
             onValueChange = {
                 name = it
             },
             onClickAccept = {
-                viewModel.updateUserName(name.trim())
-                showDialog = false
+                viewModel.saveUserName(name.trim())
+                viewModel.setShowDialog(false)
             }
         )
     }
@@ -77,14 +71,14 @@ fun SettingsScreen(
 fun SettingsScreen(
     modifier: Modifier,
     userName: String = "",
-    onClickNombreUsuario: () -> Unit,
+    onClickUserName: () -> Unit,
 ) {
     Column(
         modifier = modifier,
     ) {
         Column(modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .clickable { onClickNombreUsuario() }
+            .clickable { onClickUserName() }
         ) {
             Text(
                 text = stringResource(R.string.nombre_del_usuario),

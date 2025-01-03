@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.eddymy1304.sacalacuenta.R
-import com.eddymy1304.sacalacuenta.data.models.DetalleCuentaView
+import com.eddymy1304.sacalacuenta.data.models.DetailReceiptView
 import com.eddymy1304.sacalacuenta.ui.theme.SacaLaCuentaTheme
 import java.util.Locale
 import java.util.regex.Pattern
@@ -43,7 +43,7 @@ fun DetalleCuentaCard(
     modifier: Modifier = Modifier,
     focusRequester: FocusRequester,
     position: Int,
-    det: DetalleCuentaView,
+    det: DetailReceiptView,
     onValueChangeProduct: () -> Unit,
     onClickDelete: () -> Unit
 ) {
@@ -310,7 +310,7 @@ fun PreviewDetalleCard() {
     SacaLaCuentaTheme {
         DetalleCuentaCard(
             modifier = Modifier.fillMaxWidth(),
-            det = DetalleCuentaView(
+            det = DetailReceiptView(
                 name = remember {
                     mutableStateOf("Pollo")
                 },

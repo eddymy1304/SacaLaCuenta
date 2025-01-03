@@ -1,35 +1,37 @@
 package com.eddymy1304.sacalacuenta.ui.screens
 
+import android.app.Activity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.eddymy1304.sacalacuenta.MainViewModel
 import com.eddymy1304.sacalacuenta.R
-import com.eddymy1304.sacalacuenta.data.models.Screen.*
+import com.eddymy1304.sacalacuenta.data.models.Screen
+import com.eddymy1304.sacalacuenta.data.models.Screen.ScreenReceipt
+import com.eddymy1304.sacalacuenta.data.models.Screen.ScreenSettings
 import com.eddymy1304.sacalacuenta.data.models.getListItemsBottomNav
-import com.eddymy1304.sacalacuenta.ui.components.MyBottomBar
-import com.eddymy1304.sacalacuenta.ui.components.MyNavHost
-import com.eddymy1304.sacalacuenta.ui.components.MyTopBar
+import com.eddymy1304.sacalacuenta.ui.components.AppBottomBar
+import com.eddymy1304.sacalacuenta.ui.components.AppNavHost
+import com.eddymy1304.sacalacuenta.ui.components.AppTopBar
 import com.eddymy1304.sacalacuenta.ui.theme.SacaLaCuentaTheme
 
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel,
-    finished: () -> Unit
+    viewModel: MainViewModel
 ) {
 
-    LaunchedEffect(Unit) { viewModel.getUser() }
+    val context = LocalContext.current
 
     val userName by viewModel.userName.collectAsState()
 
@@ -44,34 +46,38 @@ fun MainScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            MyTopBar(
+            AppTopBar(
                 title = stringResource(id = title),
-                subTitle = if (userName.isNotBlank()) stringResource(
-                    id = R.string.sub_title,
-                    userName
-                )
+                subTitle = if (userName.isNotBlank())
+                    stringResource(id = R.string.sub_title, userName)
                 else stringResource(id = R.string.sub_title_with_out),
                 showActions = showActions,
-                showIconNav = navController.currentDestination?.route != ScreenCuenta::class.qualifiedName,
+                showIconNav = navController.currentDestination?.route !in listOf(
+                    ScreenReceipt::class.qualifiedName,
+                    Screen.ScreenHistory::class.qualifiedName
+                ),
                 onClickAction = { navController.navigate(ScreenSettings) }
             ) {
-                if (navController.currentDestination?.route == ScreenCuenta::class.qualifiedName) finished()
+                if (navController.currentDestination?.route == ScreenReceipt::class.qualifiedName) (context as? Activity)?.finish()
                 else navController.navigateUp()
             }
         },
         bottomBar = {
             AnimatedVisibility(visible = showBottomNav) {
-                MyBottomBar(navController = navController, items = getListItemsBottomNav())
+                AppBottomBar(
+                    navController = navController,
+                    items = getListItemsBottomNav()
+                )
             }
         }
     ) {
-        MyNavHost(
+        AppNavHost(
             modifier = Modifier
                 .padding(it)
                 .fillMaxSize(),
             viewModel = viewModel,
             navController = navController,
-            startDestination = ScreenCuenta
+            startDestination = ScreenReceipt
         )
     }
 }
@@ -82,8 +88,7 @@ fun PreviewMainScreen() {
     SacaLaCuentaTheme {
         MainScreen(
             modifier = Modifier.fillMaxSize(),
-            viewModel = hiltViewModel(),
-            finished = {}
+            viewModel = hiltViewModel()
         )
     }
 }

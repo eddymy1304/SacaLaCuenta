@@ -3,7 +3,7 @@ package com.eddymy1304.sacalacuenta.data.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
-@Database(entities = [CuentaEntity::class, DetalleCuentaEntity::class], version = 2)
+@Database(entities = [ReceiptEntity::class, DetailReceiptEntity::class], version = 3)
 abstract class AppDataBase : RoomDatabase() {
-    abstract fun cuentaDao(): Daos
+    abstract fun receiptDao(): Dao
 }

@@ -35,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -47,53 +46,51 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.eddymy1304.sacalacuenta.MainViewModel
 import com.eddymy1304.sacalacuenta.R
-import com.eddymy1304.sacalacuenta.data.models.Screen.ScreenCuenta
 import com.eddymy1304.sacalacuenta.ui.components.DetalleCuentaCard
-import com.eddymy1304.sacalacuenta.ui.components.MenuMetodoPago
-import com.eddymy1304.sacalacuenta.ui.components.MySimpleLoading
-import com.eddymy1304.sacalacuenta.ui.components.getItemsMetodoPago
+import com.eddymy1304.sacalacuenta.ui.components.MenuPaymentMethod
+import com.eddymy1304.sacalacuenta.ui.components.SimpleLoading
+import com.eddymy1304.sacalacuenta.ui.components.getItemsPaymentMethod
 import com.eddymy1304.sacalacuenta.ui.theme.SacaLaCuentaTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun CuentaScreen(
+fun ReceiptScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    viewModel: MainViewModel
+    viewModel: ReceiptViewModel = hiltViewModel(),
+    configScreen: () -> Unit,
 ) {
 
-    LaunchedEffect(Unit) { viewModel.configScreen(ScreenCuenta.title) }
+    LaunchedEffect(Unit) { configScreen() }
 
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
     val showLoading by viewModel.showLoading.collectAsState()
 
-    val cuenta by viewModel.cuenta.collectAsState()
-    val listDetCuenta by viewModel.listDetCuenta.collectAsState()
+    val receipt by viewModel.receipt.collectAsState()
+    val listDetailReceipt by viewModel.listDetailReceipt.collectAsState()
     val total by viewModel.total.collectAsState()
-
     val navTo by viewModel.navTo.collectAsState()
 
-    val maxLenghTitle = 20
+    val maxLengthTitle = 20
 
-    var openMetodoPago by remember { mutableStateOf(false) }
+    var openPaymentMethod by remember { mutableStateOf(false) }
 
     val listFocus = remember { mutableStateListOf(FocusRequester()) }
 
     Log.d(
-        "CuentaScreen", """
-        cuenta: $cuenta
-        listDetCuenta: $listDetCuenta
+        "ReceiptScreen", """
+        receipt: $receipt
+        listDet: $listDetailReceipt
         total: $total
         
     """.trimIndent()
     )
 
     ConstraintLayout(modifier = modifier) {
-        val (titleCuenta, listDet, fab, metodoPago, totalCuenta, btnSave, divider) = createRefs()
+        val (titleReceipt, listDet, fab, pm, totalReceipt, btnSave, divider) = createRefs()
 
         ExtendedFloatingActionButton(
             modifier = Modifier.constrainAs(btnSave) {
@@ -102,20 +99,20 @@ fun CuentaScreen(
             },
             icon = { Icon(imageVector = Icons.Outlined.Check, contentDescription = null) },
             text = { Text(text = stringResource(id = R.string.save)) },
-            onClick = { viewModel.saveCuentaAndListDetCuenta(cuenta, listDetCuenta) })
+            onClick = { viewModel.saveReceiptWithListDet(receipt, listDetailReceipt) })
 
         OutlinedTextField(
             modifier = Modifier
-                .constrainAs(titleCuenta) {
+                .constrainAs(titleReceipt) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start, margin = 8.dp)
                     width = Dimension.value(240.dp)
                 },
             singleLine = true,
-            value = cuenta.title.value.orEmpty(),
+            value = receipt.title.value.orEmpty(),
             onValueChange = {
-                if (it.length <= maxLenghTitle) {
-                    cuenta.title.value = it
+                if (it.length <= maxLengthTitle) {
+                    receipt.title.value = it
                 }
             },
             label = {
@@ -137,13 +134,13 @@ fun CuentaScreen(
             )
         )
 
-        Column(modifier = Modifier.constrainAs(metodoPago) {
-            top.linkTo(titleCuenta.bottom, margin = 8.dp)
+        Column(modifier = Modifier.constrainAs(pm) {
+            top.linkTo(titleReceipt.bottom, margin = 8.dp)
             start.linkTo(parent.start, margin = 8.dp)
             width = Dimension.value(200.dp)
         }) {
             OutlinedTextField(
-                value = cuenta.paymentMethod.value.orEmpty(),
+                value = receipt.paymentMethod.value.orEmpty(),
                 onValueChange = {},
                 singleLine = true,
                 readOnly = true,
@@ -165,26 +162,26 @@ fun CuentaScreen(
                     LaunchedEffect(interactionSource) {
                         interactionSource.interactions.collect { interaction ->
                             if (interaction is PressInteraction.Release) {
-                                openMetodoPago = true
+                                openPaymentMethod = true
                             }
                         }
                     }
                 }
             )
 
-            MenuMetodoPago(
+            MenuPaymentMethod(
                 modifier = Modifier.width(200.dp),
-                expended = openMetodoPago,
-                onDismiss = { openMetodoPago = false },
-                list = getItemsMetodoPago()
+                expended = openPaymentMethod,
+                onDismiss = { openPaymentMethod = false },
+                list = getItemsPaymentMethod()
             ) {
-                cuenta.paymentMethod.value = it
-                openMetodoPago = false
+                receipt.paymentMethod.value = it
+                openPaymentMethod = false
             }
         }
 
         Text(
-            modifier = Modifier.constrainAs(totalCuenta) {
+            modifier = Modifier.constrainAs(totalReceipt) {
                 bottom.linkTo(divider.top, margin = 8.dp)
                 end.linkTo(parent.end, margin = 8.dp)
             },
@@ -193,7 +190,7 @@ fun CuentaScreen(
         )
 
         HorizontalDivider(modifier = Modifier.constrainAs(divider) {
-            top.linkTo(metodoPago.bottom, margin = 8.dp)
+            top.linkTo(pm.bottom, margin = 8.dp)
             start.linkTo(parent.start)
             end.linkTo(parent.end)
         })
@@ -201,7 +198,7 @@ fun CuentaScreen(
         LazyColumn(
             state = listState,
             modifier = Modifier.constrainAs(listDet) {
-                top.linkTo(metodoPago.bottom, margin = 8.dp)
+                top.linkTo(pm.bottom, margin = 8.dp)
                 start.linkTo(parent.start, margin = 8.dp)
                 end.linkTo(parent.end, margin = 8.dp)
                 bottom.linkTo(fab.top, margin = 8.dp)
@@ -209,7 +206,7 @@ fun CuentaScreen(
                 height = Dimension.fillToConstraints
             }
         ) {
-            itemsIndexed(listDetCuenta) { position, det ->
+            itemsIndexed(listDetailReceipt) { position, det ->
                 DetalleCuentaCard(
                     position = position + 1,
                     focusRequester = listFocus[position],
@@ -217,7 +214,7 @@ fun CuentaScreen(
                     onValueChangeProduct = { viewModel.updateTotal() },
                 ) {
                     listFocus.remove(listFocus[position])
-                    viewModel.deleteDetalleCuenta(det)
+                    viewModel.deleteDetailReceipt(det)
                     viewModel.updateTotal()
                 }
             }
@@ -230,9 +227,9 @@ fun CuentaScreen(
             },
             onClick = {
                 listFocus.add(FocusRequester())
-                viewModel.addDetalleCuenta()
+                viewModel.addDetailReceipt()
                 scope.launch {
-                    val lastIndex = listDetCuenta.size - 1
+                    val lastIndex = listDetailReceipt.size - 1
                     listState.animateScrollToItem(lastIndex)
                     listFocus.last().requestFocus()
                 }
@@ -242,7 +239,7 @@ fun CuentaScreen(
     }
 
     AnimatedVisibility(visible = showLoading) {
-        MySimpleLoading()
+        SimpleLoading()
     }
 
     DisposableEffect(navTo) {
@@ -257,13 +254,15 @@ fun CuentaScreen(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun PreviewCuentaScreen(
+fun PreviewReceiptScreen(
 ) {
     SacaLaCuentaTheme {
-        CuentaScreen(
+        ReceiptScreen(
             modifier = Modifier.fillMaxSize(),
             navController = rememberNavController(),
             viewModel = hiltViewModel()
-        )
+        ) {
+
+        }
     }
 }

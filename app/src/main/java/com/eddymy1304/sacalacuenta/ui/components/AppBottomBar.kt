@@ -19,7 +19,7 @@ import com.eddymy1304.sacalacuenta.data.models.getListItemsBottomNav
 import com.eddymy1304.sacalacuenta.ui.theme.SacaLaCuentaTheme
 
 @Composable
-fun MyBottomBar(
+fun AppBottomBar(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     items: List<Screen>
@@ -41,9 +41,9 @@ fun MyBottomBar(
                             saveState = true
                         }
                         // Avoid multiple copies of the same destination when
-                        // reselecting the same item
+                        // re selecting the same item
                         launchSingleTop = true
-                        // Restore state when reselecting a previously selected item
+                        // Restore state when re selecting a previously selected item
                         restoreState = true
                     }
                 },
@@ -64,8 +64,8 @@ fun MyBottomBar(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewMyBottomBar() {
+fun PreviewAppBottomBar() {
     SacaLaCuentaTheme {
-        MyBottomBar(items = getListItemsBottomNav(), navController = rememberNavController())
+        AppBottomBar(items = getListItemsBottomNav(), navController = rememberNavController())
     }
 }

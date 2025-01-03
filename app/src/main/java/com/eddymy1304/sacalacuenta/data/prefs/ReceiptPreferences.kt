@@ -11,7 +11,7 @@ import com.eddymy1304.sacalacuenta.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class CuentaPreferences(context: Context) {
+class ReceiptPreferences(context: Context) {
 
     private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create {
         context.preferencesDataStoreFile(name = context.getString(R.string.name_datastore_preferences))

@@ -1,7 +1,7 @@
 package com.eddymy1304.sacalacuenta.di
 
 import android.content.Context
-import com.eddymy1304.sacalacuenta.data.prefs.CuentaPreferences
+import com.eddymy1304.sacalacuenta.data.prefs.ReceiptPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ object DataStoreModule {
 
     @Provides
     @Singleton
-    fun provideCuentaPreferences(@ApplicationContext context: Context): CuentaPreferences {
-        return CuentaPreferences(context)
+    fun provideReceiptPreferences(@ApplicationContext context: Context): ReceiptPreferences {
+        return ReceiptPreferences(context)
     }
 }

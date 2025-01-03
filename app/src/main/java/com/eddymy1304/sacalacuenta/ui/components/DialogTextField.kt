@@ -23,7 +23,7 @@ import com.eddymy1304.sacalacuenta.R
 import com.eddymy1304.sacalacuenta.ui.theme.SacaLaCuentaTheme
 
 @Composable
-fun DialogTextfield(
+fun DialogTextField(
     modifier: Modifier = Modifier,
     title: String,
     text: String,
@@ -71,11 +71,11 @@ fun DialogTextfield(
 
 @Preview(showBackground = true, locale = "es")
 @Composable
-fun DialogTextfieldPreview() {
+fun DialogTextFieldPreview() {
     SacaLaCuentaTheme {
-        DialogTextfield(
+        DialogTextField(
             title = stringResource(R.string.nombre_del_usuario),
-            text = "probando prueba"
+            text = "testing test"
         ) {
 
         }

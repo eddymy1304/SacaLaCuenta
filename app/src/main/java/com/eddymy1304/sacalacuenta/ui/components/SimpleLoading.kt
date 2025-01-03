@@ -9,20 +9,20 @@ import androidx.compose.ui.window.Dialog
 import com.eddymy1304.sacalacuenta.ui.theme.SacaLaCuentaTheme
 
 @Composable
-fun MySimpleLoading(
+fun SimpleLoading(
     modifier: Modifier = Modifier,
-    onDismis: () -> Unit = {}
+    onDismiss: () -> Unit = {}
 ) {
-    Dialog(onDismissRequest = onDismis) {
+    Dialog(onDismissRequest = onDismiss) {
         CircularProgressIndicator(modifier = modifier)
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
-fun MySimpleLoadingPreview() {
+fun SimpleLoadingPreview() {
     SacaLaCuentaTheme {
-        MySimpleLoading(modifier = Modifier.fillMaxSize()) {
+        SimpleLoading(modifier = Modifier.fillMaxSize()) {
 
         }
     }

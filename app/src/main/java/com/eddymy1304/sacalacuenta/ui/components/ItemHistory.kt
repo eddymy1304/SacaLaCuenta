@@ -14,14 +14,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.eddymy1304.sacalacuenta.R
-import com.eddymy1304.sacalacuenta.data.models.CuentaView
+import com.eddymy1304.sacalacuenta.data.models.ReceiptView
 import com.eddymy1304.sacalacuenta.ui.theme.SacaLaCuentaTheme
 import com.eddymy1304.sacalacuenta.utils.Utils
 
 @Composable
-fun ItemHistorial(
+fun ItemHistory(
     modifier: Modifier = Modifier,
-    cuenta: CuentaView,
+    receipt: ReceiptView,
     onClick: () -> Unit = {}
 ) {
     ConstraintLayout(modifier.clickable { onClick() }) {
@@ -29,7 +29,7 @@ fun ItemHistorial(
         Text(
             text = stringResource(
                 id = R.string.text_nombre,
-                cuenta.title.value.orEmpty()
+                receipt.title.value.orEmpty()
             ),
             modifier = Modifier.constrainAs(name) {
                 start.linkTo(parent.start)
@@ -42,7 +42,7 @@ fun ItemHistorial(
         Text(
             text = stringResource(
                 id = R.string.text_total_cuenta,
-                cuenta.total.value ?: 0.00
+                receipt.total.value ?: 0.00
             ),
             modifier = Modifier.constrainAs(total) {
                 start.linkTo(date.end)
@@ -55,7 +55,7 @@ fun ItemHistorial(
         Text(
             text = stringResource(
                 id = R.string.text_fecha,
-                Utils.formatDateTime(cuenta.dateTime)
+                Utils.formatDateTime(receipt.dateTime)
             ),
             modifier = Modifier.constrainAs(date) {
                 start.linkTo(parent.start)
@@ -67,7 +67,7 @@ fun ItemHistorial(
         Text(
             text = stringResource(
                 id = R.string.text_metodo_pago,
-                cuenta.paymentMethod.value.orEmpty()
+                receipt.paymentMethod.value.orEmpty()
             ),
             modifier = Modifier.constrainAs(payment) {
                 start.linkTo(parent.start)
@@ -89,19 +89,19 @@ fun ItemHistorial(
 
 @Preview(showBackground = true, locale = "es")
 @Composable
-fun PreviewItemHistorial() {
+fun PreviewItemHistory() {
     SacaLaCuentaTheme {
-        ItemHistorial(
+        ItemHistory(
             modifier = Modifier.fillMaxWidth(),
-            cuenta = CuentaView(
+            receipt = ReceiptView(
                 title = remember {
-                    mutableStateOf("Cuenta 1")
+                    mutableStateOf("Receipt 1")
                 },
                 total = remember {
                     mutableStateOf(100.00)
                 },
                 paymentMethod = remember {
-                    mutableStateOf("Efectivo")
+                    mutableStateOf("Credit card")
                 },
                 dateTime = Utils.formatDateTime(Utils.getDateTime())
             )

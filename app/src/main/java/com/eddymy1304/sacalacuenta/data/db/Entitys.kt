@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 
 @Entity
-data class CuentaEntity(
+data class ReceiptEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "title") val title: String? = null,
     @ColumnInfo(name = "total") val total: Double? = null,
@@ -18,20 +18,20 @@ data class CuentaEntity(
 )
 
 @Entity
-data class DetalleCuentaEntity(
+data class DetailReceiptEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name = "id_cuenta") val idCuenta: Int,
+    @ColumnInfo(name = "id_receipt") val idReceipt: Int,
     @ColumnInfo(name = "name") val name: String? = null,
     @ColumnInfo(name = "quantity") val quantity: Double? = null,
     @ColumnInfo(name = "price") val price: Double? = null,
     @ColumnInfo(name = "total") val total: Double? = null
 )
 
-data class CuentaWithDetalleCuenta(
-    @Embedded val cuenta: CuentaEntity,
+data class ReceiptWithDetailReceipt(
+    @Embedded val receipt: ReceiptEntity,
     @Relation(
         parentColumn = "id",
-        entityColumn = "id_cuenta"
+        entityColumn = "id_receipt"
     )
-    val listDetalle: List<DetalleCuentaEntity>
+    val listDetail: List<DetailReceiptEntity>
 )

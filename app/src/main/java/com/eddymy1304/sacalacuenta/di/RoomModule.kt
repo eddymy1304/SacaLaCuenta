@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.eddymy1304.sacalacuenta.R
 import com.eddymy1304.sacalacuenta.data.db.AppDataBase
-import com.eddymy1304.sacalacuenta.data.db.Daos
+import com.eddymy1304.sacalacuenta.data.db.Dao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +28,7 @@ object RoomModule {
 
     @Provides
     @Singleton
-    fun provideDaos(db: AppDataBase): Daos {
-        return db.cuentaDao()
+    fun provideDao(db: AppDataBase): Dao {
+        return db.receiptDao()
     }
 }

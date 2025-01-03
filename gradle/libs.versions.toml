@@ -1,31 +1,31 @@
 [versions]
 agp = "8.9.0-alpha03"
-android-tools = "31.7.2"
+android-tools = "31.7.3"
 kotlin = "2.1.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-kotlinxSerializationJsonVersion = "1.6.3"
+kotlinxSerializationJsonVersion = "1.7.3"
 lifecycle = "2.8.7"
 activityCompose = "1.9.3"
-composeBom = "2024.11.00"
+composeBom = "2024.12.01"
 compose-compiler = "1.5.15"
-compose-latest = "1.7.5"
-hilt = "2.52"
+compose-latest = "1.7.6"
+hilt = "2.53.1"
 datastore = "1.1.1"
 room = "2.6.1"
 hilt-navigation = "1.2.0"
 
-navigation-compose = "2.8.4"
+navigation-compose = "2.8.5"
 
 constraintlayout-compose = "1.1.0"
 
-ui-version = "1.7.5"
+ui-version = "1.7.6"
 
-accompanist-version = "0.36.0"
+accompanist-version = "0.37.0"
 
-devtools = "2.0.20-1.0.25"
+devtools = "2.1.0-1.0.29"
 
 [libraries]
 

@@ -12,13 +12,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eddymy1304.sacalacuenta.R
-import com.eddymy1304.sacalacuenta.data.models.DetalleCuentaView
+import com.eddymy1304.sacalacuenta.data.models.DetailReceiptView
 import com.eddymy1304.sacalacuenta.ui.theme.SacaLaCuentaTheme
 
 @Composable
 fun ItemTicket(
     modifier: Modifier = Modifier,
-    det: DetalleCuentaView,
+    det: DetailReceiptView,
     textColor: Color = Color.Unspecified
 ) {
     Row(modifier) {
@@ -75,7 +75,7 @@ fun PreviewItemTicket() {
     SacaLaCuentaTheme {
         ItemTicket(
             modifier = Modifier.fillMaxWidth(),
-            det = DetalleCuentaView()
+            det = DetailReceiptView()
         )
     }
 }

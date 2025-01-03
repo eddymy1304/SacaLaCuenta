@@ -49,13 +49,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.core.content.ContextCompat.startActivity
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.eddymy1304.sacalacuenta.MainViewModel
 import com.eddymy1304.sacalacuenta.R
-import com.eddymy1304.sacalacuenta.data.models.DetalleCuentaView
-import com.eddymy1304.sacalacuenta.data.models.Screen.ScreenCuenta
-import com.eddymy1304.sacalacuenta.data.models.Screen.ScreenTicket
+import com.eddymy1304.sacalacuenta.data.models.DetailReceiptView
+import com.eddymy1304.sacalacuenta.data.models.Screen.ScreenReceipt
 import com.eddymy1304.sacalacuenta.ui.components.CabListDetTicket
 import com.eddymy1304.sacalacuenta.ui.components.ItemTicket
 import com.eddymy1304.sacalacuenta.ui.theme.SacaLaCuentaTheme
@@ -70,15 +68,21 @@ import java.io.File
 @Composable
 fun TicketScreen(
     modifier: Modifier = Modifier,
+    id: Int,
     navController: NavHostController,
-    viewModel: MainViewModel
+    viewModel: TicketViewModel = hiltViewModel(),
+    configScreen: () -> Unit
 ) {
 
-    LaunchedEffect(Unit) { viewModel.configScreen(ScreenTicket.title) }
+    LaunchedEffect(Unit) {
+        configScreen()
+        Log.d("TicketScreen", "id: $id")
+        viewModel.getReceiptWithDetById(id)
+    }
 
-    val cuentaWithDetalle by viewModel.cuentaWithDetalle.collectAsState()
+    val receiptWithDet by viewModel.receiptWithDet.collectAsState()
 
-    Log.d("TicketScreen", "cuentaWithCuenta: $cuentaWithDetalle")
+    Log.d("TicketScreen", "receiptWithDet: $receiptWithDet")
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -98,8 +102,8 @@ fun TicketScreen(
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) { granteds ->
-        if (granteds.all { it.value }) {
+    ) { granters ->
+        if (granters.all { it.value }) {
             background = Color.White
             textColor = Color.Black
             scope.launch {
@@ -111,7 +115,7 @@ fun TicketScreen(
                 shareBitmap(context, uri)
             }
         } else {
-            viewModel.updateMessage(UiText.StringResource(R.string.permission_denied))
+            viewModel.setMessage(UiText.StringResource(R.string.permission_denied))
         }
     }
 
@@ -127,7 +131,7 @@ fun TicketScreen(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        viewModel.updateShowDialogPermissionRationale(false)
+                        viewModel.setShowDialogPermissionRationale(false)
                         requestPermissionLauncher.launch(listPermissions.toTypedArray())
                     }
                 ) {
@@ -148,20 +152,23 @@ fun TicketScreen(
                 }
                 drawLayer(graphicsLayer)
             },
-        textTitle = cuentaWithDetalle.cuenta.title.value.orEmpty(),
-        textPaymentMethod = cuentaWithDetalle.cuenta.paymentMethod.value.orEmpty(),
-        textDate = cuentaWithDetalle.cuenta.dateTime.orEmpty(),
-        textTotal = cuentaWithDetalle.cuenta.total.value ?: 0.0,
-        listDet = cuentaWithDetalle.listDetCuenta,
+        textTitle = receiptWithDet.receipt.title.value.orEmpty(),
+        textPaymentMethod = receiptWithDet.receipt.paymentMethod.value.orEmpty(),
+        textDate = receiptWithDet.receipt.dateTime.orEmpty(),
+        textTotal = receiptWithDet.receipt.total.value ?: 0.0,
+        listDet = receiptWithDet.listDetailReceipt,
         onClickIconHome = {
-            navController.popBackStack()
-            navController.navigate(ScreenCuenta)
+            navController.navigate(ScreenReceipt) {
+                popUpTo(ScreenReceipt) {
+                    inclusive = true
+                }
+            }
         },
         onClickIconShare = {
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
 
                 if (!permissionsState.allPermissionsGranted && permissionsState.shouldShowRationale)
-                    viewModel.updateShowDialogPermissionRationale(true)
+                    viewModel.setShowDialogPermissionRationale(true)
                 else requestPermissionLauncher.launch(listPermissions.toTypedArray())
 
             } else {
@@ -191,7 +198,7 @@ fun TicketScreen(
     textPaymentMethod: String = "",
     textDate: String = "",
     textTotal: Double = 0.0,
-    listDet: List<DetalleCuentaView> = listOf(),
+    listDet: List<DetailReceiptView> = listOf(),
     onClickIconShare: () -> Unit = {},
     onClickIconHome: () -> Unit = {}
 ) {
@@ -324,7 +331,7 @@ fun TicketScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true, locale = "es")
+@Preview(showBackground = true, locale = "es")
 @Composable
 fun PreviewTicketScreen() {
     SacaLaCuentaTheme {
@@ -388,5 +395,6 @@ private fun shareBitmap(context: Context, uri: Uri) {
         putExtra(Intent.EXTRA_STREAM, uri)
         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
-    startActivity(context, createChooser(intent, "Share your image"), null)
+    context.startActivity(createChooser(intent, "Share your image"))
+    //startActivity(context, createChooser(intent, "Share your image"), null)
 }

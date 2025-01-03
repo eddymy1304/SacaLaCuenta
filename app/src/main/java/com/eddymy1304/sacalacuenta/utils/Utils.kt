@@ -3,8 +3,8 @@ package com.eddymy1304.sacalacuenta.utils
 import android.content.Context
 import android.os.Environment
 import android.util.Log
-import com.eddymy1304.sacalacuenta.data.models.CuentaDetalleExport
-import com.eddymy1304.sacalacuenta.data.models.CuentaWithDetalleView
+import com.eddymy1304.sacalacuenta.data.models.ReceiptDetailExport
+import com.eddymy1304.sacalacuenta.data.models.ReceiptWithDetailView
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -109,14 +109,14 @@ object Utils {
         return utcTimestamp + offset
     }
 
-    fun exportToCsv(context: Context, list: List<CuentaWithDetalleView>) {
+    fun exportToCsv(context: Context, list: List<ReceiptWithDetailView>) {
         val listExport = list.flatMap { cuentaWithDetalle ->
-            cuentaWithDetalle.listDetCuenta.map { detalle ->
-                CuentaDetalleExport(
-                    idCuenta = cuentaWithDetalle.cuenta.id ?: 0,
-                    name = cuentaWithDetalle.cuenta.title.value.orEmpty(),
-                    paymentMethod = cuentaWithDetalle.cuenta.paymentMethod.value.orEmpty(),
-                    date = cuentaWithDetalle.cuenta.date.orEmpty(),
+            cuentaWithDetalle.listDetailReceipt.map { detalle ->
+                ReceiptDetailExport(
+                    idReceipt = cuentaWithDetalle.receipt.id ?: 0,
+                    name = cuentaWithDetalle.receipt.title.value.orEmpty(),
+                    paymentMethod = cuentaWithDetalle.receipt.paymentMethod.value.orEmpty(),
+                    date = cuentaWithDetalle.receipt.date.orEmpty(),
                     product = detalle.name.value.orEmpty(),
                     quantity = detalle.quantity.value ?: 0.0,
                     price = detalle.price.value ?: 0.0,
@@ -136,7 +136,7 @@ object Utils {
                 out.write("IDCUENTA,NOMBRE,METODO DE PAGO, FECHA, PRODUCTO, CANTIDAD, PRECIO, TOTAL\n")
                 // Escribir datos
                 listExport.forEach { data ->
-                    out.write("${data.idCuenta},${data.name},${data.paymentMethod},${data.date},${data.product},${data.quantity},${data.price},${data.totalByProduct}\n")
+                    out.write("${data.idReceipt},${data.name},${data.paymentMethod},${data.date},${data.product},${data.quantity},${data.price},${data.totalByProduct}\n")
                 }
             }
             Log.d("Eddycito", "exportToCsv: $outputFile")

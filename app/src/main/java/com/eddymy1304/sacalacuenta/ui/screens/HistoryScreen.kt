@@ -1,5 +1,6 @@
 package com.eddymy1304.sacalacuenta.ui.screens
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,9 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -30,68 +28,59 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.eddymy1304.sacalacuenta.MainViewModel
 import com.eddymy1304.sacalacuenta.R
-import com.eddymy1304.sacalacuenta.data.models.CuentaWithDetalleView
-import com.eddymy1304.sacalacuenta.data.models.Screen.ScreenHistorial
+import com.eddymy1304.sacalacuenta.data.models.ReceiptWithDetailView
 import com.eddymy1304.sacalacuenta.data.models.Screen.ScreenTicket
 import com.eddymy1304.sacalacuenta.ui.components.DatePickerDialog
-import com.eddymy1304.sacalacuenta.ui.components.ItemHistorial
+import com.eddymy1304.sacalacuenta.ui.components.ItemHistory
 import com.eddymy1304.sacalacuenta.ui.theme.SacaLaCuentaTheme
 import com.eddymy1304.sacalacuenta.utils.Utils
 
 @Composable
-fun HistorialScreen(
+fun HistoryScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    viewModel: MainViewModel
+    viewModel: HistoryViewModel = hiltViewModel(),
+    configScreen: () -> Unit
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.configScreen(ScreenHistorial.title)
-        viewModel.getTicketsByDate()
-    }
+    LaunchedEffect(Unit) { configScreen() }
 
-    val listCuentas by viewModel.listCuentaWithDetalle.collectAsState()
+    val listReceipts by viewModel.listReceiptWithDet.collectAsState()
     val showDatePicker by viewModel.showDatePicker.collectAsState()
-    val fecha by viewModel.fecha.collectAsState()
+    val date by viewModel.date.collectAsState()
 
-    var showAlertDialog by remember { mutableStateOf(false) }
+    val showAlertDialog by viewModel.showAlertDialog.collectAsState()
 
     val context = LocalContext.current.applicationContext
-    HistorialScreen(
-        fecha = fecha,
-        listCuentas = listCuentas,
-        onClickIconExport = {
-            showAlertDialog = true
-        },
+    HistoryScreen(
+        date = date,
+        listReceipts = listReceipts,
+        onClickIconExport = { viewModel.setShowAlertDialog(true) },
         showAlertDialog = showAlertDialog,
-        onDismissAlertDialog = { showAlertDialog = false },
+        onDismissAlertDialog = { viewModel.setShowAlertDialog(false) },
         onConfirmAlertDialog = {
-            Utils.exportToCsv(context, listCuentas)
-            showAlertDialog = false
+            Utils.exportToCsv(context, listReceipts)
+            viewModel.setShowAlertDialog(false)
         },
         showDatePicker = showDatePicker,
         modifier = modifier,
-        onDismissDatePicker = { viewModel.updateShowDatePicker(false) },
-        onDateSelectedDatePicker = {
-            if (it.isNotBlank()) {
-                viewModel.updateFecha(it)
-                viewModel.updateShowDatePicker(false)
-                viewModel.getTicketsByDate()
-            }
+        onDismissDatePicker = { viewModel.setShowDatePicker(false) },
+        onDateSelectedDatePicker = { d ->
+            if (d.isNotBlank()) viewModel.getTicketsByDate(d)
         },
-        onClickIconDate = { viewModel.updateShowDatePicker(true) }
+        onClickIconDate = { viewModel.setShowDatePicker(true) }
     ) {
-        viewModel.updateCuentaWithDetalle(it)
-        navController.navigate(ScreenTicket)
+        Log.d("HistoryScreen", "Nav ScreenTicket id: ${it.receipt.id}")
+        navController.navigate(ScreenTicket(id = it.receipt.id ?: throw Exception("id null")))
     }
 }
 
 @Composable
-fun HistorialScreen(
+fun HistoryScreen(
     modifier: Modifier = Modifier,
-    fecha: String = "",
+    date: String = "",
     showAlertDialog: Boolean = false,
     onDismissAlertDialog: () -> Unit = {},
     onConfirmAlertDialog: () -> Unit = {},
@@ -100,23 +89,23 @@ fun HistorialScreen(
     onClickIconExport: () -> Unit = {},
     onDismissDatePicker: () -> Unit = {},
     onDateSelectedDatePicker: (String) -> Unit = {},
-    listCuentas: List<CuentaWithDetalleView> = listOf(),
-    onClickItem: (CuentaWithDetalleView) -> Unit
+    listReceipts: List<ReceiptWithDetailView> = listOf(),
+    onClickItem: (ReceiptWithDetailView) -> Unit
 ) {
 
     ConstraintLayout(modifier) {
-        val (date, list, total) = createRefs()
+        val (dt, list, total) = createRefs()
 
         OutlinedTextField(
             singleLine = true,
             readOnly = true,
-            modifier = Modifier.constrainAs(date) {
+            modifier = Modifier.constrainAs(dt) {
                 top.linkTo(parent.top, margin = 8.dp)
                 start.linkTo(parent.start, margin = 16.dp)
                 end.linkTo(parent.end, margin = 16.dp)
                 width = Dimension.fillToConstraints
             },
-            value = Utils.formatDate(fecha),
+            value = Utils.formatDate(date),
             onValueChange = {},
             label = { Text(text = stringResource(id = R.string.hint_fecha)) },
             trailingIcon = {
@@ -131,7 +120,7 @@ fun HistorialScreen(
 
         LazyColumn(
             modifier = Modifier.constrainAs(list) {
-                top.linkTo(date.bottom)
+                top.linkTo(dt.bottom)
                 bottom.linkTo(total.top)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
@@ -141,14 +130,14 @@ fun HistorialScreen(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(listCuentas) {
-                ItemHistorial(cuenta = it.cuenta) {
+            items(listReceipts) {
+                ItemHistory(receipt = it.receipt) {
                     onClickItem(it)
                 }
             }
         }
 
-        val totalByDay = listCuentas.sumOf { it.cuenta.total.value ?: 0.0 }
+        val totalByDay = listReceipts.sumOf { it.receipt.total.value ?: 0.0 }
 
         Text(
             modifier = Modifier
@@ -190,11 +179,11 @@ fun HistorialScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true, locale = "es")
+@Preview(showBackground = true, locale = "es")
 @Composable
-fun PreviewHistorialScreen() {
+fun PreviewHistoryScreen() {
     SacaLaCuentaTheme {
-        HistorialScreen(
+        HistoryScreen(
             modifier = Modifier.fillMaxSize()
         ) {
 

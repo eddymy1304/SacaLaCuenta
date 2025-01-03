@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.sp
 import com.eddymy1304.sacalacuenta.ui.theme.SacaLaCuentaTheme
 
 @Composable
-fun MenuMetodoPago(
+fun MenuPaymentMethod(
     modifier: Modifier = Modifier,
     expended: Boolean,
     onDismiss: () -> Unit,
@@ -25,7 +25,7 @@ fun MenuMetodoPago(
         onDismissRequest = onDismiss
     ) {
         list.forEach { text ->
-            ItemMenuMetodoPago(text = text) {
+            ItemMenuPaymentMethod(text = text) {
                 onClick(text)
             }
         }
@@ -33,7 +33,7 @@ fun MenuMetodoPago(
 }
 
 @Composable
-fun ItemMenuMetodoPago(
+fun ItemMenuPaymentMethod(
     modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit
@@ -56,11 +56,11 @@ fun ItemMenuMetodoPago(
 @Composable
 fun PreviewMenuMetodoPago() {
     SacaLaCuentaTheme {
-        MenuMetodoPago(expended = true, onDismiss = {}, list = getItemsMetodoPago(), onClick = {})
+        MenuPaymentMethod(expended = true, onDismiss = {}, list = getItemsPaymentMethod(), onClick = {})
     }
 }
 
-fun getItemsMetodoPago(): List<String> {
+fun getItemsPaymentMethod(): List<String> {
     return listOf(
         "",
         "Efectivo",

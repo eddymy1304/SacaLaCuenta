@@ -2,10 +2,10 @@ package com.eddymy1304.sacalacuenta.data.models
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.eddymy1304.sacalacuenta.data.db.CuentaEntity
+import com.eddymy1304.sacalacuenta.data.db.ReceiptEntity
 import com.eddymy1304.sacalacuenta.utils.Utils
 
-data class CuentaView(
+data class ReceiptView(
     var id: Int? = null,
     var date: String? = null,
     var dateTime: String? = null,
@@ -14,7 +14,7 @@ data class CuentaView(
     var total: MutableState<Double?> = mutableStateOf(null),
     var paymentMethod: MutableState<String?> = mutableStateOf(null)
 ) {
-    constructor(response: CuentaEntity) : this(
+    constructor(response: ReceiptEntity) : this(
         id = response.id,
         date = response.date,
         dateTime = Utils.formatDateTime(response.dateTime),

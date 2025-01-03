@@ -19,7 +19,7 @@ import com.eddymy1304.sacalacuenta.ui.theme.SacaLaCuentaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopBar(
+fun AppTopBar(
     modifier: Modifier = Modifier,
     title: String = "",
     subTitle: String = "",
@@ -32,8 +32,8 @@ fun MyTopBar(
         modifier = modifier,
         title = {
             Column {
-                Text(text = title, fontSize = 24.sp)
-                Text(text = subTitle, fontSize = 14.sp)
+                Text(text = title, fontSize = 24.sp, maxLines = 1)
+                Text(text = subTitle, fontSize = 14.sp, maxLines = 1)
             }
         },
         navigationIcon = {
@@ -62,11 +62,11 @@ fun MyTopBar(
 
 @Composable
 @Preview(showBackground = true)
-fun PreviewMyTopBar() {
+fun PreviewAppTopBar() {
     SacaLaCuentaTheme {
-        MyTopBar(
-            title = "SacaLaCuenta",
-            subTitle = "Bienvenido, Eddy.",
+        AppTopBar(
+            title = "App",
+            subTitle = "Welcome, Eddy.",
             onClickAction = {}
         ) {
 
