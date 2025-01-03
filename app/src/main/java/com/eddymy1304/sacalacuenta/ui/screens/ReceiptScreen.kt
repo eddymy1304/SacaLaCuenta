@@ -47,7 +47,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.eddymy1304.sacalacuenta.R
-import com.eddymy1304.sacalacuenta.ui.components.DetalleCuentaCard
+import com.eddymy1304.sacalacuenta.ui.components.DetailReceiptCard
 import com.eddymy1304.sacalacuenta.ui.components.MenuPaymentMethod
 import com.eddymy1304.sacalacuenta.ui.components.SimpleLoading
 import com.eddymy1304.sacalacuenta.ui.components.getItemsPaymentMethod
@@ -207,7 +207,7 @@ fun ReceiptScreen(
             }
         ) {
             itemsIndexed(listDetailReceipt) { position, det ->
-                DetalleCuentaCard(
+                DetailReceiptCard(
                     position = position + 1,
                     focusRequester = listFocus[position],
                     det = det,

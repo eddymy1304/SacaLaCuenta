@@ -39,7 +39,7 @@ import java.util.Locale
 import java.util.regex.Pattern
 
 @Composable
-fun DetalleCuentaCard(
+fun DetailReceiptCard(
     modifier: Modifier = Modifier,
     focusRequester: FocusRequester,
     position: Int,
@@ -284,21 +284,21 @@ fun filterNumberDecimal(inputText: String, maxIntegerPart: Int, maxDecimalPart: 
                 filteredText
             }
 
-        val partes = filterColon.split(".")
-        val parteEntera = partes[0]
-        val parteDecimal = partes.getOrNull(1)
+        val parts = filterColon.split(".")
+        val integerPart = parts[0]
+        val decimalPart = parts.getOrNull(1)
 
-        val parteEnteraFilterZero = if (parteEntera.startsWith("0")) {
-            parteEntera.take(1) + parteEntera.drop(1).trimStart('0')
+        val integerPartFilterZero = if (integerPart.startsWith("0")) {
+            integerPart.take(1) + integerPart.drop(1).trimStart('0')
         } else {
-            parteEntera
+            integerPart
         }
 
-        val parteEnteraFinal = parteEnteraFilterZero.take(maxIntegerPart)
+        val integerPartFinal = integerPartFilterZero.take(maxIntegerPart)
 
-        val parteDecimalFinal = parteDecimal?.take(maxDecimalPart)
+        val decimalPartFinal = decimalPart?.take(maxDecimalPart)
 
-        val finalText = "$parteEnteraFinal${parteDecimalFinal?.let { ".$it" } ?: ""}"
+        val finalText = "$integerPartFinal${decimalPartFinal?.let { ".$it" } ?: ""}"
 
         return finalText
     }
@@ -306,13 +306,13 @@ fun filterNumberDecimal(inputText: String, maxIntegerPart: Int, maxDecimalPart: 
 
 @Preview(showBackground = true, locale = "es")
 @Composable
-fun PreviewDetalleCard() {
+fun PreviewDetailCard() {
     SacaLaCuentaTheme {
-        DetalleCuentaCard(
+        DetailReceiptCard(
             modifier = Modifier.fillMaxWidth(),
             det = DetailReceiptView(
                 name = remember {
-                    mutableStateOf("Pollo")
+                    mutableStateOf("Chicken")
                 },
                 quantity = remember {
                     mutableStateOf(null)
