@@ -18,3 +18,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "SacaLaCuenta"
 include(":app")
+include(":core:database")
+include(":core:datastore")
