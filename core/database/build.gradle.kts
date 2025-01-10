@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = Configuration.NAME_SPACE
+    namespace = "${Configuration.NAME_SPACE}.core.database"
 
     room {
         schemaDirectory("$projectDir/schemas")

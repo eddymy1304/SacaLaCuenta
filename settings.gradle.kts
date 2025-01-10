@@ -17,6 +17,11 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "SacaLaCuenta"
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
 include(":core:database")
 include(":core:datastore")
+include(":core:domain")
+include(":core:data")
+include(":core:model")
