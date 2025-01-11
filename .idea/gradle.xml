@@ -41,6 +41,11 @@
             <option value="$PROJECT_DIR$/core/model" />
             <option value="$PROJECT_DIR$/core/ui" />
             <option value="$PROJECT_DIR$/core/viewmodel" />
+            <option value="$PROJECT_DIR$/feature" />
+            <option value="$PROJECT_DIR$/feature/history" />
+            <option value="$PROJECT_DIR$/feature/receipt" />
+            <option value="$PROJECT_DIR$/feature/settings" />
+            <option value="$PROJECT_DIR$/feature/ticket" />
           </set>
         </option>
       </GradleProjectSettings>

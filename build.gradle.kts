@@ -26,4 +26,6 @@ plugins {
     alias(libs.plugins.kotlin.compose.compiler) apply false
 
     alias(libs.plugins.sacalacuenta.android.hilt) apply false
+
+    alias(libs.plugins.sacalacuenta.android.feature) apply false
 }

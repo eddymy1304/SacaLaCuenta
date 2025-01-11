@@ -55,5 +55,10 @@ gradlePlugin {
             id= "sacalacuenta.android.hilt"
             implementationClass = "AndroidHiltConventionPlugin"
         }
+
+        register("androidFeature") {
+            id= "sacalacuenta.android.feature"
+            implementationClass = "AndroidFeatureConventionPlugin"
+        }
     }
 }

@@ -50,7 +50,7 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-compose-ui-fonts = {group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "ui-version" }
+androidx-compose-ui-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "ui-version" }
 
 androidx-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 
@@ -83,7 +83,7 @@ kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-p
 compose-compiler-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 
 [plugins]
-devtools-ksp = {id = "com.google.devtools.ksp", version.ref = "devtools"}
+devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "devtools" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
@@ -91,11 +91,13 @@ jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotli
 room = { id = "androidx.room", version.ref = "room" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-kotlin-jvm = {id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin"}
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 
-sacalacuenta-android-application = { id = "sacalacuenta.android.application", version = "unspecified" }
-sacalacuenta-android-library = { id = "sacalacuenta.android.library", version = "unspecified" }
-sacalacuenta-android-test = { id = "sacalacuenta.android.test", version = "unspecified" }
-sacalacuenta-android-application-compose = {id = "sacalacuenta.android.application.compose", version = "unspecified"}
-sacalacuenta-android-library-compose = {id = "sacalacuenta.android.library.compose"}
-sacalacuenta-android-hilt = { id = "sacalacuenta.android.hilt", version = "unspecified"}
+# Plugins defined by this project
+sacalacuenta-android-application = { id = "sacalacuenta.android.application" }
+sacalacuenta-android-library = { id = "sacalacuenta.android.library" }
+sacalacuenta-android-test = { id = "sacalacuenta.android.test" }
+sacalacuenta-android-application-compose = { id = "sacalacuenta.android.application.compose" }
+sacalacuenta-android-library-compose = { id = "sacalacuenta.android.library.compose" }
+sacalacuenta-android-hilt = { id = "sacalacuenta.android.hilt" }
+sacalacuenta-android-feature = { id = "sacalacuenta.android.feature" }
