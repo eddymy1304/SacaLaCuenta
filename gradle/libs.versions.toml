@@ -97,5 +97,5 @@ sacalacuenta-android-application = { id = "sacalacuenta.android.application", ve
 sacalacuenta-android-library = { id = "sacalacuenta.android.library", version = "unspecified" }
 sacalacuenta-android-test = { id = "sacalacuenta.android.test", version = "unspecified" }
 sacalacuenta-android-application-compose = {id = "sacalacuenta.android.application.compose", version = "unspecified"}
-sacalacuenta-android-library-compose = {id = "sacalacuenta.android.library.compose", version = "unspecified"}
+sacalacuenta-android-library-compose = {id = "sacalacuenta.android.library.compose"}
 sacalacuenta-android-hilt = { id = "sacalacuenta.android.hilt", version = "unspecified"}

@@ -26,6 +26,8 @@ internal fun Project.configureCompose(
             add("implementation", libs.findLibrary("androidx.activity.compose").get())
             add("implementation", platform(libs.findLibrary("androidx.compose.bom").get()))
             add("implementation", libs.findLibrary("androidx.navigation.compose").get())
+            add("implementation", libs.findLibrary("androidx.ui.tooling").get())
+            add("implementation", libs.findLibrary("androidx.ui.tooling.preview").get())
             add("implementation", libs.findLibrary("androidx.constraintlayout.compose").get())
             add("implementation", libs.findLibrary("androidx.compose.foundation").get())
         }

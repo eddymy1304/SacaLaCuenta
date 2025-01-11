@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--CabListDetTicket-->
+    <string name="label_title_product">Product</string>
+    <string name="label_title_cant">QTY</string>
+    <string name="label_title_uni" translatable="false">P.U</string>
+    <string name="label_title_total">Total</string>
+
+
+    <string name="text_number_detail_receipt" translatable="false">%1$02d.</string>
+
+    <string name="label_title_amount">Quantity</string>
+
+
+    <string name="label_title_price">Price</string>
+
+
+    <string name="number_two_decimal" translatable="false">%1$.2f</string>
+
+
+    <string name="text_name">Name: %1$s</string>
+    <string name="text_payment_method">Payment Method: %1$s</string>
+    <string name="text_date">Date: %1$s</string>
+    <string name="text_total" translatable="false">Total: %1$.2f</string>
+
+</resources>

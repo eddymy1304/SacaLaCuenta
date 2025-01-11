@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--CabListDetTicket-->
+    <string name="label_title_product">Producto</string>
+    <string name="label_title_cant">Cant</string>
+    <string name="label_title_total">Total</string>
+
+    <string name="label_title_amount">Cantidad</string>
+
+    <string name="label_title_price">Precio</string>
+
+
+    <string name="text_name">Nombre: %1$s</string>
+    <string name="text_payment_method">Metodo de pago: %1$s</string>
+    <string name="text_date">Fecha: %1$s</string>
+
+</resources>
