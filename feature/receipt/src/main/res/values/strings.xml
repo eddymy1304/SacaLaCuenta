@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="empty_field_title">Completing the title field</string>
+    <string name="empty_field_payment_method">Completing the payment method field</string>
+    <string name="empty_list_detail_receipt">You must enter at least one item</string>
+    <string name="empty_field_total_detail_receipt">The items must have a total</string>
+
+    <string name="save">Save</string>
+
+    <string name="label_title_receipt">Title</string>
+    <string name="label_title_payment_method">Payment Method</string>
+</resources>

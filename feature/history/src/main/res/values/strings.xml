@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hint_date">Date</string>
+    <string name="total_by_day">Total by day: %1$.2f</string>
+    <string name="title_export_to_csv">Export receipts</string>
+    <string name="message_export_to_csv">Do you want to export the accounts to a CSV file?</string>
+</resources>

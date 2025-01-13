@@ -48,11 +48,11 @@ fun ItemMenu(
 @Composable
 fun PreviewSimpleMenu() {
     SacaLaCuentaTheme {
-        SimpleMenu(expended = true, onDismiss = {}, list = getItemsPaymentMethod(), onClick = {})
+        SimpleMenu(expended = true, onDismiss = {}, list = getItemsPaymentMethodPreview(), onClick = {})
     }
 }
 
-fun getItemsPaymentMethod(): List<String> {
+fun getItemsPaymentMethodPreview(): List<String> {
     return listOf(
         "", "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6"
     )

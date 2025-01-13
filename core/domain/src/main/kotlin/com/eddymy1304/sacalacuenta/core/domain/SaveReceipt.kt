@@ -1,8 +1,8 @@
 package com.eddymy1304.sacalacuenta.core.domain
 
+import com.eddymy1304.sacalacuenta.core.common.Utils
 import com.eddymy1304.sacalacuenta.core.data.repository.ReceiptRepository
 import com.eddymy1304.sacalacuenta.core.domain.mappers.asEntity
-import com.eddymy1304.sacalacuenta.core.domain.utils.Utils
 import com.eddymy1304.sacalacuenta.core.model.DetailReceipt
 import com.eddymy1304.sacalacuenta.core.model.Receipt
 import javax.inject.Inject

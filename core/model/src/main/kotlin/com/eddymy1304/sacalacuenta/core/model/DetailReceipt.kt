@@ -4,7 +4,7 @@ data class DetailReceipt(
     var id: Int = -1,
     var idReceipt: Int = -1,
     var name: String = "",
-    var quantity: Double = 0.00,
+    var amount: Double = 0.00,
     var price: Double = 0.00,
     var total: Double = 0.00,
 

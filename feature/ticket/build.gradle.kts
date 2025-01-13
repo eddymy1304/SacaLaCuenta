@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "${Configuration.NAME_SPACE}.feature.receipt"
+    namespace = "${Configuration.NAME_SPACE}.feature.ticket"
 }
 
 dependencies {

@@ -21,6 +21,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
 
                 implementation(project(":core:ui"))
                 implementation(project(":core:designsystem"))
+                implementation(project(":core:viewmodel"))
 
                 listOf(
                     libs.findLibrary("androidx.hilt.navigation").get(),

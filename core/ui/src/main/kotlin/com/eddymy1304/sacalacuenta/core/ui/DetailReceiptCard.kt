@@ -30,7 +30,6 @@ import androidx.constraintlayout.compose.Dimension
 import com.eddymy1304.sacalacuenta.core.designsystem.icon.AppIcons
 import com.eddymy1304.sacalacuenta.core.designsystem.theme.SacaLaCuentaTheme
 import com.eddymy1304.sacalacuenta.core.model.DetailReceipt
-import java.util.regex.Pattern
 
 @Composable
 fun DetailReceiptCard(
@@ -56,7 +55,7 @@ fun DetailReceiptCard(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            val (number, name, quantity, price, total, deleteIcon, lockIcon) = createRefs()
+            val (number, name, amount, price, total, deleteIcon, lockIcon) = createRefs()
 
             Text(
                 text = stringResource(
@@ -99,7 +98,7 @@ fun DetailReceiptCard(
 
             OutlinedTextField(
                 modifier = Modifier
-                    .constrainAs(quantity) {
+                    .constrainAs(amount) {
                         start.linkTo(parent.start)
                         top.linkTo(name.bottom)
                         end.linkTo(price.start)
@@ -115,37 +114,15 @@ fun DetailReceiptCard(
                     Text(text = stringResource(id = R.string.label_title_amount))
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                value = "${det.quantity}",
-                onValueChange = onValueChangeAmount
-                /*{
-                    det.textQuantity.value = filterNumberDecimal(it, 4, 2)
-                    det.quantity.value = try {
-                        det.textQuantity.value?.toDoubleOrNull()
-                    } catch (e: Exception) {
-                        null
-                    }
-                    if (det.price.value != null) {
-                        val res = try {
-                            (det.textQuantity.value?.toDouble() ?: 0.0) * (det.price.value ?: 0.0)
-                        } catch (e: Exception) {
-                            0.00
-                        }
-                        det.textTotal.value = try {
-                            String.format(Locale.getDefault(), "%.2f", res)
-                        } catch (e: Exception) {
-                            ""
-                        }
-                        det.total.value = det.textTotal.value?.toDoubleOrNull()
-                    }
-                    onValueChangeProduct()
-                }*/,
+                value = "${det.amount}",
+                onValueChange = onValueChangeAmount,
                 singleLine = true
             )
 
             OutlinedTextField(
                 modifier = Modifier
                     .constrainAs(price) {
-                        start.linkTo(quantity.end)
+                        start.linkTo(amount.end)
                         top.linkTo(name.bottom)
                         end.linkTo(total.start)
                         bottom.linkTo(parent.bottom, margin = 8.dp)
@@ -153,29 +130,7 @@ fun DetailReceiptCard(
                     },
                 enabled = !det.itemLocked,
                 value = "${det.price}",
-                onValueChange = onValueChangePrice /*{
-                    det.textPrice.value = filterNumberDecimal(it, 4, 2)
-                    det.price.value = try {
-                        det.textPrice.value?.toDoubleOrNull()
-                    } catch (e: Exception) {
-                        null
-                    }
-                    if (det.quantity.value != null) {
-                        val res = try {
-                            (det.quantity.value ?: 0.0) * (det.textPrice.value?.toDouble() ?: 0.0)
-                        } catch (e: Exception) {
-                            0.00
-                        }
-
-                        det.textTotal.value = try {
-                            String.format(Locale.getDefault(), "%.2f", res)
-                        } catch (e: Exception) {
-                            "0.00"
-                        }
-                        det.total.value = det.textTotal.value?.toDoubleOrNull()
-                    }
-                    onValueChangeProduct()
-                }*/,
+                onValueChange = onValueChangePrice,
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 label = {
@@ -188,15 +143,7 @@ fun DetailReceiptCard(
             )
             OutlinedTextField(
                 value = "${det.total}",
-                onValueChange = onValueChangeTotal, /*{
-                    det.textTotal.value = filterNumberDecimal(it, 4, 2)
-                    det.total.value = try {
-                        det.textTotal.value?.toDoubleOrNull()
-                    } catch (e: Exception) {
-                        null
-                    }
-                    onValueChangeProduct()
-                },*/
+                onValueChange = onValueChangeTotal,
                 singleLine = true,
                 enabled = det.itemLocked,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -236,16 +183,7 @@ fun DetailReceiptCard(
                     end.linkTo(deleteIcon.start)
                     top.linkTo(parent.top)
                 },
-                onClick = onClickIconLock/*{
-                    det.itemLocked.value = !det.itemLocked.value
-                    det.quantity.value = null
-                    det.price.value = null
-                    det.total.value = null
-                    det.textQuantity.value = null
-                    det.textPrice.value = null
-                    det.textTotal.value = null
-                    onValueChangeProduct()
-                }*/
+                onClick = onClickIconLock
             ) {
                 Icon(
                     imageVector = if (det.itemLocked) AppIcons.Lock
@@ -262,46 +200,6 @@ fun DetailReceiptCard(
 
 }
 
-fun filterNumberDecimal(inputText: String, maxIntegerPart: Int, maxDecimalPart: Int): String {
-
-    val decimalRegex = "^(0|[1-9]\\d{0,${maxIntegerPart - 1}})(\\.\\d{0,${maxDecimalPart}})?$"
-    val matcher = Pattern.compile(decimalRegex).matcher(inputText)
-
-    if (matcher.matches()) {
-        return inputText
-    } else {
-        val filteredText = inputText.filter { it.isDigit() || it == '.' }
-
-        // Corroborar que solo haya un punto decimal y que no esté al inicio del texto
-        val filterColon =
-            if (filteredText.count { it == '.' } > 1 ||
-                (filteredText.length > 1 && filteredText.startsWith('.'))
-            ) {
-                filteredText.replaceFirst(".", "")
-            } else {
-                filteredText
-            }
-
-        val parts = filterColon.split(".")
-        val integerPart = parts[0]
-        val decimalPart = parts.getOrNull(1)
-
-        val integerPartFilterZero = if (integerPart.startsWith("0")) {
-            integerPart.take(1) + integerPart.drop(1).trimStart('0')
-        } else {
-            integerPart
-        }
-
-        val integerPartFinal = integerPartFilterZero.take(maxIntegerPart)
-
-        val decimalPartFinal = decimalPart?.take(maxDecimalPart)
-
-        val finalText = "$integerPartFinal${decimalPartFinal?.let { ".$it" } ?: ""}"
-
-        return finalText
-    }
-}
-
 @Preview(showBackground = true, locale = "es")
 @Composable
 fun PreviewDetailCard() {
@@ -310,7 +208,7 @@ fun PreviewDetailCard() {
             modifier = Modifier.fillMaxWidth(),
             det = DetailReceipt(
                 name = "Chicken",
-                quantity = 0.00,
+                amount = 0.00,
                 price = 0.00,
                 total = 0.00,
             ),

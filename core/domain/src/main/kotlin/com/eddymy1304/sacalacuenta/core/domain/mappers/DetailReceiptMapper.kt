@@ -9,7 +9,7 @@ object DetailReceiptMapper : EntityToDomainMapper<DetailReceiptEntity, DetailRec
             id = entity.id,
             idReceipt = entity.idReceipt,
             name = entity.name ?: "",
-            quantity = entity.quantity ?: 0.00,
+            amount = entity.quantity ?: 0.00,
             price = entity.price ?: 0.00,
             total = entity.total ?: 0.00
         )
@@ -20,7 +20,7 @@ object DetailReceiptMapper : EntityToDomainMapper<DetailReceiptEntity, DetailRec
             id = domain.id,
             idReceipt = domain.idReceipt,
             name = domain.name,
-            quantity = domain.quantity,
+            quantity = domain.amount,
             price = domain.price,
             total = domain.total
         )

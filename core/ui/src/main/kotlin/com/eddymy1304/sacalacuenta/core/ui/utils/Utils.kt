@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-object Utils {
+internal object Utils {
     fun formatDateTime(dateTime: String?): String {
         if (dateTime.isNullOrBlank()) return ""
         val datetimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())

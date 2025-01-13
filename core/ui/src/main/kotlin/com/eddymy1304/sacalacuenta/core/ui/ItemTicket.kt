@@ -34,10 +34,10 @@ fun ItemTicket(
             modifier = Modifier
                 .weight(2f)
                 .padding(horizontal = 4.dp),
-            text = if (det.quantity == 0.00) "-"
+            text = if (det.amount == 0.00) "-"
             else stringResource(
                 id = R.string.number_two_decimal,
-                det.quantity
+                det.amount
             ),
             textAlign = TextAlign.End
         )
