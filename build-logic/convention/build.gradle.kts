@@ -18,10 +18,12 @@ kotlin {
 }
 
 dependencies {
-    compileOnly(libs.compose.compiler.gradlePlugin)
+    compileOnly(libs.compose.compiler.gradle.plugin)
     compileOnly(libs.android.gradle.plugin)
     compileOnly(libs.android.tools.common)
     compileOnly(libs.kotlin.gradle.plugin)
+    compileOnly(libs.ksp.gradle.plugin)
+    compileOnly(libs.room.gradle.plugin)
 }
 
 gradlePlugin {
@@ -59,6 +61,11 @@ gradlePlugin {
         register("androidFeature") {
             id= "sacalacuenta.android.feature"
             implementationClass = "AndroidFeatureConventionPlugin"
+        }
+
+        register("androidRoom") {
+            id = "sacalacuenta.android.room"
+            implementationClass = "AndroidRoomConventionPlugin"
         }
     }
 }

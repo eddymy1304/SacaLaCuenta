@@ -1,9 +1,6 @@
 package com.eddymy1304.sacalacuenta.core.designsystem.component
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.List
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.NavigationBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -13,6 +10,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.eddymy1304.sacalacuenta.core.designsystem.icon.AppIcons
 import com.eddymy1304.sacalacuenta.core.designsystem.theme.SacaLaCuentaTheme
 
 @Composable
@@ -36,10 +34,10 @@ fun PreviewAppBottomBar() {
     SacaLaCuentaTheme {
         AppBottomBar(
             navController = controller
-        ) { currentDestination ->
+        ) { _ ->
             ItemBottomBar(
                 title = "Item 1",
-                icon = Icons.Outlined.Home,
+                icon = AppIcons.Home,
                 isSelected = false,
                 onItemClick = {
 
@@ -48,7 +46,7 @@ fun PreviewAppBottomBar() {
 
             ItemBottomBar(
                 title = "Item 2",
-                icon = Icons.AutoMirrored.Outlined.List,
+                icon = AppIcons.History,
                 isSelected = false,
                 onItemClick = {
 

@@ -1,3 +1,5 @@
+import com.eddymy1304.sacalacuenta.implementation
+import com.eddymy1304.sacalacuenta.ksp
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
@@ -16,9 +18,14 @@ class AndroidHiltConventionPlugin : Plugin<Project> {
             val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
             dependencies {
-                add("implementation", libs.findLibrary("dagger.hilt").get())
-                add("implementation", libs.findLibrary("androidx.hilt.navigation").get())
-                add("ksp", libs.findLibrary("dagger.hilt.compiler").get())
+                listOf(
+                    libs.findLibrary("dagger.hilt").get(),
+                    libs.findLibrary("androidx.hilt.navigation").get()
+                ).forEach {
+                    implementation(it)
+                }
+
+                ksp(libs.findLibrary("dagger.hilt.compiler").get())
             }
         }
     }

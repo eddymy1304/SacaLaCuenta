@@ -18,12 +18,10 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
             val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
             dependencies {
-
-                implementation(project(":core:ui"))
-                implementation(project(":core:designsystem"))
-                implementation(project(":core:viewmodel"))
-
                 listOf(
+                    project(":core:ui"),
+                    project(":core:designsystem"),
+                    project(":core:viewmodel"),
                     libs.findLibrary("androidx.hilt.navigation").get(),
                     libs.findLibrary("androidx.lifecycle.runtime.ktx").get(),
                     libs.findLibrary("androidx.lifecycle.viewmodel").get(),

@@ -23,13 +23,17 @@ internal fun Project.configureCompose(
         val libs = project.extensions.getByType<VersionCatalogsExtension>().named("libs")
 
         dependencies {
-            add("implementation", libs.findLibrary("androidx.activity.compose").get())
-            add("implementation", platform(libs.findLibrary("androidx.compose.bom").get()))
-            add("implementation", libs.findLibrary("androidx.navigation.compose").get())
-            add("implementation", libs.findLibrary("androidx.ui.tooling").get())
-            add("implementation", libs.findLibrary("androidx.ui.tooling.preview").get())
-            add("implementation", libs.findLibrary("androidx.constraintlayout.compose").get())
-            add("implementation", libs.findLibrary("androidx.compose.foundation").get())
+            listOf(
+                platform(libs.findLibrary("androidx.compose.bom").get()),
+                libs.findLibrary("androidx.activity.compose").get(),
+                libs.findLibrary("androidx.navigation.compose").get(),
+                libs.findLibrary("androidx.ui.tooling").get(),
+                libs.findLibrary("androidx.ui.tooling.preview").get(),
+                libs.findLibrary("androidx.constraintlayout.compose").get(),
+                libs.findLibrary("androidx.compose.foundation").get()
+            ).forEach {
+                implementation(it)
+            }
         }
     }
 

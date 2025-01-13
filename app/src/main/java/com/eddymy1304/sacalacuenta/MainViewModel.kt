@@ -3,9 +3,6 @@ package com.eddymy1304.sacalacuenta
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
-import com.eddymy1304.sacalacuenta.base.BaseViewModel
-import com.eddymy1304.sacalacuenta.data.models.Screen.ScreenReceipt
-import com.eddymy1304.sacalacuenta.domain.GetUserName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

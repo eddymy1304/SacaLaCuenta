@@ -69,6 +69,20 @@ android {
 
 dependencies {
 
+    //feature
+    implementation(projects.feature.receipt)
+    implementation(projects.feature.history)
+    implementation(projects.feature.settings)
+    implementation(projects.feature.ticket)
+
+    //core
+    implementation(projects.core.common)
+    implementation(projects.core.data)
+    implementation(projects.core.designsystem)
+    implementation(projects.core.model)
+    implementation(projects.core.ui)
+    implementation(projects.core.viewmodel)
+
     implementation(libs.androidx.core.ktx)
 
     implementation(libs.androidx.lifecycle.runtime.ktx)
