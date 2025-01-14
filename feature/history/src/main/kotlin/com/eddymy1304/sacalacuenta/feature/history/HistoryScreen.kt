@@ -1,6 +1,5 @@
 package com.eddymy1304.sacalacuenta.feature.history
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,21 +26,19 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.eddymy1304.sacalacuenta.core.designsystem.component.DatePickerDialog
 import com.eddymy1304.sacalacuenta.core.designsystem.icon.AppIcons
 import com.eddymy1304.sacalacuenta.core.designsystem.theme.SacaLaCuentaTheme
 import com.eddymy1304.sacalacuenta.core.model.ReceiptWithDetail
 import com.eddymy1304.sacalacuenta.core.ui.ItemHistory
-import com.eddymy1304.sacalacuenta.core.ui.Screen.ScreenTicket
 import com.eddymy1304.sacalacuenta.feature.history.utils.Utils
 
 @Composable
 fun HistoryScreen(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     viewModel: HistoryViewModel = hiltViewModel(),
-    configScreen: () -> Unit
+    configScreen: () -> Unit,
+    navToTicketScreen: (id: Int) -> Unit
 ) {
 
     LaunchedEffect(Unit) { configScreen() }
@@ -72,8 +69,7 @@ fun HistoryScreen(
         },
         onClickIconDate = { viewModel.setShowDatePicker(true) }
     ) { receiptWithDetail ->
-        Log.d("HistoryScreen", "Nav ScreenTicket id: ${receiptWithDetail.receipt.id}")
-        navController.navigate(ScreenTicket(id = receiptWithDetail.receipt.id))
+        navToTicketScreen(receiptWithDetail.receipt.id)
     }
 }
 

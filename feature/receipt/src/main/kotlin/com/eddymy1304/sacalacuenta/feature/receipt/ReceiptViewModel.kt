@@ -6,12 +6,12 @@ import com.eddymy1304.sacalacuenta.core.domain.GetReceipts
 import com.eddymy1304.sacalacuenta.core.domain.SaveReceipt
 import com.eddymy1304.sacalacuenta.core.model.DetailReceipt
 import com.eddymy1304.sacalacuenta.core.model.Receipt
-import com.eddymy1304.sacalacuenta.core.ui.Screen
 import com.eddymy1304.sacalacuenta.core.viewmodel.BaseViewModel
 import com.eddymy1304.sacalacuenta.feature.receipt.util.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,20 +23,19 @@ class ReceiptViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _receipt = MutableStateFlow(Receipt())
-    val receipt: StateFlow<Receipt> get() = _receipt
+    val receipt: StateFlow<Receipt> = _receipt.asStateFlow()
 
     private val _listDetailReceipt = MutableStateFlow(listOf(DetailReceipt()))
-    val listDetailReceipt: StateFlow<List<DetailReceipt>> get() = _listDetailReceipt
+    val listDetailReceipt: StateFlow<List<DetailReceipt>> = _listDetailReceipt.asStateFlow()
 
     private val _total = MutableStateFlow(0.00)
-    val total: StateFlow<Double> get() = _total
+    val total: StateFlow<Double> = _total.asStateFlow()
 
-    private val _navTo: MutableStateFlow<Pair<Boolean, Screen>> =
-        MutableStateFlow(Pair(false, Screen.ScreenReceipt))
-    val navTo: StateFlow<Pair<Boolean, Screen>> get() = _navTo
+    private val _idReceiptToNavigate = MutableStateFlow(-1)
+    val idReceiptToNavigate: StateFlow<Int> = _idReceiptToNavigate.asStateFlow()
 
     private val _isOpenMenuPaymentMethod = MutableStateFlow(false)
-    val isOpenMenuPaymentMethod: StateFlow<Boolean> get() = _isOpenMenuPaymentMethod
+    val isOpenMenuPaymentMethod: StateFlow<Boolean> = _isOpenMenuPaymentMethod.asStateFlow()
 
     fun saveReceiptWithListDet(receipt: Receipt, listDet: List<DetailReceipt>) {
 
@@ -89,10 +88,8 @@ class ReceiptViewModel @Inject constructor(
     private fun navToScreenTicketByLastReceipt() {
         viewModelScope.launch {
             startLoading()
-            getReceipts.getLastReceiptWithDetail().collect { receiptWithDet ->
-                _navTo.update {
-                    Pair(true, Screen.ScreenTicket(id = receiptWithDet.receipt.id))
-                }
+            getReceipts.getLastReceiptWithDetail().collect { receiptWithDetail ->
+                _idReceiptToNavigate.update { receiptWithDetail.receipt.id }
                 stopLoading()
             }
         }
@@ -103,7 +100,7 @@ class ReceiptViewModel @Inject constructor(
     }
 
     fun resetNavTo() {
-        _navTo.update { Pair(false, Screen.ScreenReceipt) }
+        _idReceiptToNavigate.update { -1 }
     }
 
     fun deleteDetailReceipt(det: DetailReceipt) {

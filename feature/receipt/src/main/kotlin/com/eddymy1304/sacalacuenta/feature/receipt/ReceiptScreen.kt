@@ -42,20 +42,23 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.eddymy1304.sacalacuenta.core.designsystem.component.SimpleLoading
 import com.eddymy1304.sacalacuenta.core.designsystem.component.SimpleMenu
 import com.eddymy1304.sacalacuenta.core.designsystem.theme.SacaLaCuentaTheme
 import com.eddymy1304.sacalacuenta.core.ui.DetailReceiptCard
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object ReceiptScreen
 
 @Composable
 fun ReceiptScreen(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     viewModel: ReceiptViewModel = hiltViewModel(),
     configScreen: () -> Unit,
+    navToTicketScreen: (id: Int) -> Unit
 ) {
 
     LaunchedEffect(Unit) { configScreen() }
@@ -68,7 +71,7 @@ fun ReceiptScreen(
     val receipt by viewModel.receipt.collectAsState()
     val listDetailReceipt by viewModel.listDetailReceipt.collectAsState()
     val totalReceipt by viewModel.total.collectAsState()
-    val navTo by viewModel.navTo.collectAsState()
+    val idReceiptToNavigate by viewModel.idReceiptToNavigate.collectAsState()
 
     val isOpenMenuPaymentMethod by viewModel.isOpenMenuPaymentMethod.collectAsState()
 
@@ -207,7 +210,7 @@ fun ReceiptScreen(
                     onValueChangeName = { viewModel.setOnNameItemChanged(it, position) },
                     onValueChangeAmount = { viewModel.setOnAmountItemChanged(it, position) },
                     onValueChangePrice = { viewModel.setOnPriceItemChanged(it, position) },
-                    onValueChangeTotal = {  viewModel.setOnTotalItemChanged(it, position) },
+                    onValueChangeTotal = { viewModel.setOnTotalItemChanged(it, position) },
                     onClickIconLock = { viewModel.setOnLockedItemChanged(position) },
                 ) {
                     listFocus.remove(listFocus[position])
@@ -239,9 +242,9 @@ fun ReceiptScreen(
         SimpleLoading()
     }
 
-    DisposableEffect(navTo) {
-        if (navTo.first) {
-            navController.navigate(navTo.second)
+    DisposableEffect(idReceiptToNavigate) {
+        if (idReceiptToNavigate != -1) {
+            navToTicketScreen(idReceiptToNavigate)
             viewModel.resetNavTo()
         }
 
@@ -256,10 +259,9 @@ fun PreviewReceiptScreen(
     SacaLaCuentaTheme {
         ReceiptScreen(
             modifier = Modifier.fillMaxSize(),
-            navController = rememberNavController(),
-            viewModel = hiltViewModel()
-        ) {
-
-        }
+            viewModel = hiltViewModel(),
+            configScreen = {},
+            navToTicketScreen = {}
+        )
     }
 }

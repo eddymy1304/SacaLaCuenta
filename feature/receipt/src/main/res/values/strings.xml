@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="title_receipt">Receipt</string>
 
     <string name="empty_field_title">Completing the title field</string>
     <string name="empty_field_payment_method">Completing the payment method field</string>
