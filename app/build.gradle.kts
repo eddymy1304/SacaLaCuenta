@@ -4,9 +4,6 @@ plugins {
     alias(libs.plugins.sacalacuenta.android.application.compose)
     alias(libs.plugins.sacalacuenta.android.hilt)
 
-    alias(libs.plugins.devtools.ksp)
-    alias(libs.plugins.room)
-
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -61,10 +58,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-
-    room {
-        schemaDirectory("$projectDir/schemas")
-    }
 }
 
 dependencies {
@@ -101,14 +94,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    implementation(libs.androidx.icons.extended)
-
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.datastore.datastore)
-
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
 
     implementation(libs.accompanist.permissions)
 
