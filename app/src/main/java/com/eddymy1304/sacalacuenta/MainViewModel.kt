@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.eddymy1304.sacalacuenta.feature.receipt.R as receiptR
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -26,7 +27,7 @@ class MainViewModel @Inject constructor(
     private val _userName = MutableStateFlow("")
     val userName: StateFlow<String> = _userName.asStateFlow()
 
-    private val _title = MutableStateFlow(ScreenReceipt.title)
+    private val _title = MutableStateFlow(receiptR.string.title_receipt)
     val title: StateFlow<Int> = _title.asStateFlow()
 
 

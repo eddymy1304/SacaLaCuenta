@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="title_settings">Configuración</string>
 
     <string name="username">Nombre del usuario</string>
 </resources>

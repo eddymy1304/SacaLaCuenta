@@ -9,6 +9,7 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.LockOpen
 import androidx.compose.material.icons.outlined.Receipt
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.ShoppingCart
 
 object AppIcons {
     val Receipt = Icons.Outlined.Receipt
@@ -21,4 +22,5 @@ object AppIcons {
     val Unlocked = Icons.Outlined.LockOpen
 
     val Trash = Icons.Outlined.DeleteOutline
+    val Cart = Icons.Outlined.ShoppingCart
 }

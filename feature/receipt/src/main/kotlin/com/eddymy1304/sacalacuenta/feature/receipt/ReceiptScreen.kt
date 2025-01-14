@@ -42,16 +42,11 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.compose.rememberNavController
 import com.eddymy1304.sacalacuenta.core.designsystem.component.SimpleLoading
 import com.eddymy1304.sacalacuenta.core.designsystem.component.SimpleMenu
 import com.eddymy1304.sacalacuenta.core.designsystem.theme.SacaLaCuentaTheme
 import com.eddymy1304.sacalacuenta.core.ui.DetailReceiptCard
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
-
-@Serializable
-data object ReceiptScreen
 
 @Composable
 fun ReceiptScreen(

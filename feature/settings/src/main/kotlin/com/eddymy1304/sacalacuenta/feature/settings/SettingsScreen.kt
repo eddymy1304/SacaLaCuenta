@@ -21,14 +21,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.eddymy1304.sacalacuenta.core.designsystem.component.DialogTextField
 import com.eddymy1304.sacalacuenta.core.designsystem.theme.SacaLaCuentaTheme
 
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     viewModel: SettingsViewModel = hiltViewModel(),
     configScreen: () -> Unit
 ) {
@@ -99,7 +97,10 @@ fun SettingsScreen(
 @Composable
 fun ConfigScreenPreview() {
     SacaLaCuentaTheme {
-        SettingsScreen(modifier = Modifier.fillMaxSize()) {
+        SettingsScreen(
+            modifier = Modifier.fillMaxSize(),
+            userName = "Eddy"
+        ) {
 
         }
     }

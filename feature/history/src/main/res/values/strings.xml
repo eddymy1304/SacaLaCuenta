@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="title_history">History</string>
+
     <string name="hint_date">Date</string>
     <string name="total_by_day">Total by day: %1$.2f</string>
     <string name="title_export_to_csv">Export receipts</string>

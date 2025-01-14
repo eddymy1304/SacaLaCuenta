@@ -14,9 +14,5 @@
     <string name="text_name">Nombre: %1$s</string>
     <string name="text_payment_method">Metodo de pago: %1$s</string>
     <string name="text_date">Fecha: %1$s</string>
-    <string name="title_receipt">Cuenta</string>
-    <string name="title_history">Historial</string>
-    <string name="title_settings">Configuración</string>
-    <string name="title_ticket">Ticket</string>
 
 </resources>

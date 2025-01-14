@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="title_ticket">Ticket</string>
 
     <string name="permission_denied">Permission denied. \nEnable permissions in app settings.</string>
     <string name="message_dialog_permission_rationale">The app needs permissions to share the ticket image.</string>

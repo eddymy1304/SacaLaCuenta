@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.LocalGroceryStore
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.AlertDialog
@@ -50,27 +49,27 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.eddymy1304.sacalacuenta.core.common.UiText
+import com.eddymy1304.sacalacuenta.core.designsystem.icon.AppIcons
 import com.eddymy1304.sacalacuenta.core.designsystem.theme.SacaLaCuentaTheme
 import com.eddymy1304.sacalacuenta.core.model.DetailReceipt
 import com.eddymy1304.sacalacuenta.core.ui.CabListDetTicket
 import com.eddymy1304.sacalacuenta.core.ui.ItemTicket
-import com.eddymy1304.sacalacuenta.core.ui.Screen
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
+import com.eddymy1304.sacalacuenta.core.ui.R as uiR
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun TicketScreen(
     modifier: Modifier = Modifier,
     id: Int,
-    navController: NavHostController,
     viewModel: TicketViewModel = hiltViewModel(),
-    configScreen: () -> Unit
+    configScreen: () -> Unit,
+    navToReceiptScreen: () -> Unit
 ) {
 
     LaunchedEffect(Unit) {
@@ -156,13 +155,7 @@ fun TicketScreen(
         textDate = receiptWithDet.receipt.dateTime,
         textTotal = receiptWithDet.receipt.total,
         listDet = receiptWithDet.listDetailReceipt,
-        onClickIconHome = {
-            navController.navigate(Screen.ScreenReceipt) {
-                popUpTo(Screen.ScreenReceipt) {
-                    inclusive = true
-                }
-            }
-        },
+        onClickIconHome = navToReceiptScreen,
         onClickIconShare = {
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
 
@@ -206,7 +199,7 @@ fun TicketScreen(
         val (image, title, method, cab, list, total, date, div1, div2, iconShare, iconHome) = createRefs()
 
         Icon(
-            imageVector = Icons.Outlined.LocalGroceryStore,
+            imageVector = AppIcons.Cart,
             contentDescription = null,
             modifier = Modifier.constrainAs(image) {
                 top.linkTo(parent.top, margin = 8.dp)
@@ -220,7 +213,10 @@ fun TicketScreen(
 
         Text(
             color = textColor,
-            text = stringResource(id = com.eddymy1304.sacalacuenta.core.ui.R.string.text_name, textTitle),
+            text = stringResource(
+                id = uiR.string.text_name,
+                textTitle
+            ),
             modifier = Modifier.constrainAs(title) {
                 top.linkTo(image.bottom, margin = 8.dp)
                 start.linkTo(parent.start, margin = 16.dp)
@@ -230,7 +226,10 @@ fun TicketScreen(
 
         Text(
             color = textColor,
-            text = stringResource(id = com.eddymy1304.sacalacuenta.core.ui.R.string.text_payment_method, textPaymentMethod),
+            text = stringResource(
+                id = uiR.string.text_payment_method,
+                textPaymentMethod
+            ),
             modifier = Modifier.constrainAs(method) {
                 top.linkTo(title.bottom, margin = 8.dp)
                 start.linkTo(parent.start, margin = 16.dp)
@@ -241,7 +240,10 @@ fun TicketScreen(
 
         Text(
             color = textColor,
-            text = stringResource(id = com.eddymy1304.sacalacuenta.core.ui.R.string.text_date, textDate),
+            text = stringResource(
+                id = uiR.string.text_date,
+                textDate
+            ),
             modifier = Modifier.constrainAs(date) {
                 top.linkTo(method.bottom, margin = 8.dp)
                 start.linkTo(parent.start, margin = 16.dp)
@@ -291,7 +293,10 @@ fun TicketScreen(
 
         Text(
             color = textColor,
-            text = stringResource(id = com.eddymy1304.sacalacuenta.core.ui.R.string.text_total, textTotal),
+            text = stringResource(
+                id = uiR.string.text_total,
+                textTotal
+            ),
             modifier = Modifier.constrainAs(total) {
                 top.linkTo(div2.bottom, margin = 8.dp)
                 end.linkTo(parent.end, margin = 16.dp)
