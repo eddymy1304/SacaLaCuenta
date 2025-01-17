@@ -103,8 +103,12 @@ class ReceiptViewModel @Inject constructor(
         _idReceiptToNavigate.update { -1 }
     }
 
-    fun deleteDetailReceipt(det: DetailReceipt) {
-        _listDetailReceipt.update { _listDetailReceipt.value.minus(det) }
+    fun deleteDetailReceipt(position: Int) {
+        val listFiltered = _listDetailReceipt.value.filterIndexed { index, _ ->
+            index != position
+        }
+        _listDetailReceipt.update { listFiltered }
+        updateTotalList()
     }
 
     fun addDetailReceipt(det: DetailReceipt = DetailReceipt()) {
@@ -214,4 +218,10 @@ class ReceiptViewModel @Inject constructor(
         updateTotalList()
     }
 
+    fun onValueChangeTitle(text: String) {
+        if (text.length <= 20)
+            _receipt.update {
+                _receipt.value.copy(title = text)
+            }
+    }
 }

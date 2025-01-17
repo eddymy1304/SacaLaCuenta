@@ -21,11 +21,11 @@ enum class TopLevelDestination(
     RECEIPT(
         title = receiptR.string.title_receipt,
         icon = AppIcons.Receipt,
-        route = ReceiptScreen::class
+        route = ReceiptScreen::class,
     ),
     HISTORY(
         title = historyR.string.title_history,
-        icon = AppIcons.Receipt,
+        icon = AppIcons.History,
         route = HistoryScreen::class
     ),
     SETTINGS(

@@ -195,7 +195,11 @@ fun TicketScreen(
     onClickIconHome: () -> Unit = {}
 ) {
 
-    ConstraintLayout(modifier = modifier.background(background)) {
+    ConstraintLayout(
+        modifier = modifier
+            .fillMaxSize()
+            .background(background)
+    ) {
         val (image, title, method, cab, list, total, date, div1, div2, iconShare, iconHome) = createRefs()
 
         Icon(

@@ -89,7 +89,7 @@ fun HistoryScreen(
     onClickItem: (ReceiptWithDetail) -> Unit
 ) {
 
-    ConstraintLayout(modifier) {
+    ConstraintLayout(modifier.fillMaxSize()) {
         val (dt, list, total) = createRefs()
 
         OutlinedTextField(

@@ -13,18 +13,18 @@ import com.eddymy1304.sacalacuenta.feature.settings.navigation.settingsScreen
 import com.eddymy1304.sacalacuenta.feature.ticket.navigation.navigateToTicketScreen
 import com.eddymy1304.sacalacuenta.feature.ticket.navigation.ticketScreen
 import com.eddymy1304.sacalacuenta.navigation.TopLevelDestination.*
+import kotlin.reflect.KClass
 
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    startDestination: TopLevelDestination,
     viewModel: MainViewModel
 ) {
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = startDestination
+        startDestination = ReceiptScreen
     ) {
 
         receiptScreen(

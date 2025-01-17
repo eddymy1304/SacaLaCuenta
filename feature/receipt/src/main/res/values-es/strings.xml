@@ -10,4 +10,13 @@
     <string name="save">Guardar</string>
     <string name="label_title_receipt">Titulo</string>
     <string name="label_title_payment_method">Método de pago</string>
+
+    <string-array name="payment_methods">
+        <item>YAPE</item>
+        <item>PLIN</item>
+        <item>Tarjeta</item>
+        <item>Efectivo</item>
+    </string-array>
+
+
 </resources>

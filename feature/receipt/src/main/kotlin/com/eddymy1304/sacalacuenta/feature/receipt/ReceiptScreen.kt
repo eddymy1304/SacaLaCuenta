@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -29,9 +30,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,8 +48,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.eddymy1304.sacalacuenta.core.designsystem.component.SimpleLoading
 import com.eddymy1304.sacalacuenta.core.designsystem.component.SimpleMenu
 import com.eddymy1304.sacalacuenta.core.designsystem.theme.SacaLaCuentaTheme
+import com.eddymy1304.sacalacuenta.core.model.DetailReceipt
+import com.eddymy1304.sacalacuenta.core.model.Receipt
 import com.eddymy1304.sacalacuenta.core.ui.DetailReceiptCard
 import kotlinx.coroutines.launch
+import com.eddymy1304.sacalacuenta.core.ui.R as uiR
 
 @Composable
 fun ReceiptScreen(
@@ -72,6 +78,8 @@ fun ReceiptScreen(
 
     val listFocus = remember { mutableStateListOf(FocusRequester()) }
 
+    val listPaymentMethod = stringArrayResource(R.array.payment_methods).toList()
+
     Log.d(
         "ReceiptScreen", """
         receipt: $receipt
@@ -81,7 +89,78 @@ fun ReceiptScreen(
     """.trimIndent()
     )
 
-    ConstraintLayout(modifier = modifier) {
+    ReceiptScreen(
+        modifier = modifier,
+        receipt = receipt,
+        listDetailReceipt = listDetailReceipt,
+        listPaymentMethod = listPaymentMethod,
+        listState = listState,
+        listFocus = listFocus,
+        isOpenMenuPaymentMethod = isOpenMenuPaymentMethod,
+        idReceiptToNavigate = idReceiptToNavigate,
+        totalReceipt = totalReceipt,
+        onDismissMenuPaymentMethod = { viewModel.setIsOpenMenuPaymentMethod(false) },
+        onActionInteraction = { viewModel.setIsOpenMenuPaymentMethod(true) },
+        onSelectedItemMenuPaymentMethod = {
+            viewModel.setOnPaymentMethodChanged(it)
+            viewModel.setIsOpenMenuPaymentMethod(false)
+        },
+        onActionDisposableEffect = {
+            navToTicketScreen(idReceiptToNavigate)
+            viewModel.resetNavTo()
+        },
+        onClickItemIconDelete = { position ->
+            listFocus.remove(listFocus[position])
+            viewModel.deleteDetailReceipt(position)
+        },
+        onValueChangeTitle = viewModel::onValueChangeTitle,
+        onValueChangeNameItem = viewModel::setOnNameItemChanged,
+        onValueChangeAmountItem = viewModel::setOnAmountItemChanged,
+        onValueChangePriceItem = viewModel::setOnPriceItemChanged,
+        onValueChangeTotalItem = viewModel::setOnTotalItemChanged,
+        onLockedItemChanged = viewModel::setOnLockedItemChanged,
+        onClickFAB = {
+            listFocus.add(FocusRequester())
+            viewModel.addDetailReceipt()
+            scope.launch {
+                val lastIndex = listDetailReceipt.size - 1
+                listState.animateScrollToItem(lastIndex)
+                listFocus.last().requestFocus()
+            }
+        },
+        onClickSave = viewModel::saveReceiptWithListDet,
+        showLoading = showLoading
+    )
+}
+
+@Composable
+fun ReceiptScreen(
+    modifier: Modifier = Modifier,
+    receipt: Receipt,
+    listDetailReceipt: List<DetailReceipt>,
+    listPaymentMethod: List<String>,
+    listState: LazyListState,
+    listFocus: SnapshotStateList<FocusRequester>,
+    idReceiptToNavigate: Int,
+    showLoading: Boolean,
+    isOpenMenuPaymentMethod: Boolean,
+    totalReceipt: Double,
+    onDismissMenuPaymentMethod: () -> Unit,
+    onActionInteraction: () -> Unit,
+    onSelectedItemMenuPaymentMethod: (String) -> Unit,
+    onActionDisposableEffect: () -> Unit,
+    onClickItemIconDelete: (position: Int) -> Unit,
+    onValueChangeTitle: (String) -> Unit,
+    onValueChangeNameItem: (String, Int) -> Unit,
+    onValueChangeAmountItem: (String, Int) -> Unit,
+    onValueChangePriceItem: (String, Int) -> Unit,
+    onValueChangeTotalItem: (String, Int) -> Unit,
+    onLockedItemChanged: (Int) -> Unit,
+    onClickFAB: () -> Unit,
+    onClickSave: (receipt: Receipt, listDetailReceipt: List<DetailReceipt>) -> Unit,
+) {
+
+    ConstraintLayout(modifier = modifier.fillMaxSize()) {
         val (title, listDet, fab, pm, total, btnSave, div) = createRefs()
 
         ExtendedFloatingActionButton(
@@ -91,7 +170,7 @@ fun ReceiptScreen(
             },
             icon = { Icon(imageVector = Icons.Outlined.Check, contentDescription = null) },
             text = { Text(text = stringResource(id = R.string.save)) },
-            onClick = { viewModel.saveReceiptWithListDet(receipt, listDetailReceipt) })
+            onClick = { onClickSave(receipt, listDetailReceipt) })
 
         OutlinedTextField(
             modifier = Modifier
@@ -102,8 +181,7 @@ fun ReceiptScreen(
                 },
             singleLine = true,
             value = receipt.title,
-            onValueChange = {
-            },
+            onValueChange = onValueChangeTitle,
             label = {
                 Text(
                     text = stringResource(id = R.string.label_title_receipt),
@@ -150,8 +228,7 @@ fun ReceiptScreen(
                 }.also { interactionSource ->
                     LaunchedEffect(interactionSource) {
                         interactionSource.interactions.collect { interaction ->
-                            if (interaction is PressInteraction.Release)
-                                viewModel.setIsOpenMenuPaymentMethod(true)
+                            if (interaction is PressInteraction.Release) onActionInteraction()
                         }
                     }
                 }
@@ -160,12 +237,10 @@ fun ReceiptScreen(
             SimpleMenu(
                 modifier = Modifier.width(200.dp),
                 expended = isOpenMenuPaymentMethod,
-                onDismiss = { viewModel.setIsOpenMenuPaymentMethod(false) },
-                list = listOf()
-            ) {
-                viewModel.setOnPaymentMethodChanged(it)
-                viewModel.setIsOpenMenuPaymentMethod(false)
-            }
+                onDismiss = onDismissMenuPaymentMethod,
+                list = listPaymentMethod,
+                onClick = onSelectedItemMenuPaymentMethod
+            )
         }
 
         Text(
@@ -174,7 +249,7 @@ fun ReceiptScreen(
                 end.linkTo(parent.end, margin = 8.dp)
             },
             text = stringResource(
-                id = com.eddymy1304.sacalacuenta.core.ui.R.string.text_total,
+                id = uiR.string.text_total,
                 totalReceipt
             ),
             fontSize = 24.sp
@@ -202,16 +277,13 @@ fun ReceiptScreen(
                     position = position + 1,
                     focusRequester = listFocus[position],
                     det = det,
-                    onValueChangeName = { viewModel.setOnNameItemChanged(it, position) },
-                    onValueChangeAmount = { viewModel.setOnAmountItemChanged(it, position) },
-                    onValueChangePrice = { viewModel.setOnPriceItemChanged(it, position) },
-                    onValueChangeTotal = { viewModel.setOnTotalItemChanged(it, position) },
-                    onClickIconLock = { viewModel.setOnLockedItemChanged(position) },
-                ) {
-                    listFocus.remove(listFocus[position])
-                    viewModel.deleteDetailReceipt(det)
-                    viewModel.updateTotalList()
-                }
+                    onValueChangeName = { onValueChangeNameItem(it, position) },
+                    onValueChangeAmount = { onValueChangeAmountItem(it, position) },
+                    onValueChangePrice = { onValueChangePriceItem(it, position) },
+                    onValueChangeTotal = { onValueChangeTotalItem(it, position) },
+                    onClickIconLock = { onLockedItemChanged(position) },
+                    onClickIconDelete = { onClickItemIconDelete(position) }
+                )
             }
         }
 
@@ -220,15 +292,8 @@ fun ReceiptScreen(
                 bottom.linkTo(parent.bottom, margin = 8.dp)
                 end.linkTo(parent.end, margin = 8.dp)
             },
-            onClick = {
-                listFocus.add(FocusRequester())
-                viewModel.addDetailReceipt()
-                scope.launch {
-                    val lastIndex = listDetailReceipt.size - 1
-                    listState.animateScrollToItem(lastIndex)
-                    listFocus.last().requestFocus()
-                }
-            }) {
+            onClick = onClickFAB
+        ) {
             Icon(imageVector = Icons.Outlined.Add, contentDescription = null)
         }
     }
@@ -238,13 +303,10 @@ fun ReceiptScreen(
     }
 
     DisposableEffect(idReceiptToNavigate) {
-        if (idReceiptToNavigate != -1) {
-            navToTicketScreen(idReceiptToNavigate)
-            viewModel.resetNavTo()
-        }
-
+        if (idReceiptToNavigate != -1) onActionDisposableEffect()
         onDispose { }
     }
+
 }
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -253,10 +315,28 @@ fun PreviewReceiptScreen(
 ) {
     SacaLaCuentaTheme {
         ReceiptScreen(
-            modifier = Modifier.fillMaxSize(),
-            viewModel = hiltViewModel(),
-            configScreen = {},
-            navToTicketScreen = {}
+            receipt = Receipt(),
+            listDetailReceipt = listOf(),
+            listPaymentMethod = listOf(),
+            listState = rememberLazyListState(),
+            listFocus = remember { mutableStateListOf(FocusRequester()) },
+            idReceiptToNavigate = -1,
+            showLoading = false,
+            isOpenMenuPaymentMethod = false,
+            totalReceipt = 0.00,
+            onDismissMenuPaymentMethod = {},
+            onActionInteraction = {},
+            onSelectedItemMenuPaymentMethod = {},
+            onActionDisposableEffect = {},
+            onClickItemIconDelete = {},
+            onValueChangeNameItem = { _, _ -> },
+            onValueChangeAmountItem = { _, _ -> },
+            onValueChangePriceItem = { _, _ -> },
+            onValueChangeTotalItem = { _, _ -> },
+            onLockedItemChanged = {},
+            onClickFAB = {},
+            onClickSave = { _, _ -> },
+            onValueChangeTitle = { _ -> }
         )
     }
 }

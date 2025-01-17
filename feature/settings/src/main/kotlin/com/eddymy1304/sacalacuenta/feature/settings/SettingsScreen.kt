@@ -71,7 +71,7 @@ fun SettingsScreen(
     onClickUserName: () -> Unit,
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
     ) {
         Column(
             modifier = Modifier
