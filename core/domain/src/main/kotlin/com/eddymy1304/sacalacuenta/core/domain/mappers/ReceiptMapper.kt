@@ -18,7 +18,6 @@ object ReceiptMapper : EntityToDomainMapper<ReceiptEntity, Receipt> {
 
     override fun asEntity(domain: Receipt): ReceiptEntity {
         return ReceiptEntity(
-            id = -1,
             title = domain.title,
             total = domain.total,
             numberItems = domain.numberItems,

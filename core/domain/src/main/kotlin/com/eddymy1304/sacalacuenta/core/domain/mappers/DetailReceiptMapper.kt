@@ -17,7 +17,6 @@ object DetailReceiptMapper : EntityToDomainMapper<DetailReceiptEntity, DetailRec
 
     override fun asEntity(domain: DetailReceipt): DetailReceiptEntity {
         return DetailReceiptEntity(
-            id = domain.id,
             idReceipt = domain.idReceipt,
             name = domain.name,
             quantity = domain.amount,
