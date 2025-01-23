@@ -37,10 +37,10 @@ class ReceiptViewModel @Inject constructor(
     private val _isOpenMenuPaymentMethod = MutableStateFlow(false)
     val isOpenMenuPaymentMethod: StateFlow<Boolean> = _isOpenMenuPaymentMethod.asStateFlow()
 
+    private val _showDialogSave = MutableStateFlow(false)
+    val showDialogSave: StateFlow<Boolean> = _showDialogSave.asStateFlow()
+
     fun saveReceiptWithListDet(receipt: Receipt, listDet: List<DetailReceipt>) {
-
-        if (!validateReceipt(receipt, listDet)) return
-
         viewModelScope.launch {
             startLoading()
             saveReceipt(receipt, listDet)
@@ -48,6 +48,11 @@ class ReceiptViewModel @Inject constructor(
             resetReceipt()
             navToScreenTicketByLastReceipt()
         }
+    }
+
+    fun onClickButtonSaveReceipt(receipt: Receipt, listDet: List<DetailReceipt>) {
+        if (!validateReceipt(receipt, listDet)) return
+        setShowDialogSave(true)
     }
 
     private fun validateReceipt(
@@ -95,7 +100,7 @@ class ReceiptViewModel @Inject constructor(
         }
     }
 
-    fun updateTotalList() {
+    private fun updateTotalList() {
         _total.value = _listDetailReceipt.value.sumOf { it.total }
     }
 
@@ -223,5 +228,9 @@ class ReceiptViewModel @Inject constructor(
             _receipt.update {
                 _receipt.value.copy(title = text)
             }
+    }
+
+    fun setShowDialogSave(show: Boolean) {
+        _showDialogSave.update { show }
     }
 }

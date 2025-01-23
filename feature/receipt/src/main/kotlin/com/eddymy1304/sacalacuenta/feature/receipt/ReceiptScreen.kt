@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -22,6 +23,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -53,6 +55,7 @@ import com.eddymy1304.sacalacuenta.core.model.Receipt
 import com.eddymy1304.sacalacuenta.core.ui.DetailReceiptCard
 import kotlinx.coroutines.launch
 import com.eddymy1304.sacalacuenta.core.ui.R as uiR
+import com.eddymy1304.sacalacuenta.core.designsystem.R as dR
 
 @Composable
 fun ReceiptScreen(
@@ -68,6 +71,8 @@ fun ReceiptScreen(
     val scope = rememberCoroutineScope()
 
     val showLoading by viewModel.showLoading.collectAsState()
+
+    val showDialogSave by viewModel.showDialogSave.collectAsState()
 
     val receipt by viewModel.receipt.collectAsState()
     val listDetailReceipt by viewModel.listDetailReceipt.collectAsState()
@@ -99,6 +104,12 @@ fun ReceiptScreen(
         isOpenMenuPaymentMethod = isOpenMenuPaymentMethod,
         idReceiptToNavigate = idReceiptToNavigate,
         totalReceipt = totalReceipt,
+        showDialogSave = showDialogSave,
+        dialogSaveDismiss = { viewModel.setShowDialogSave(false) },
+        dialogSaveConfirmButton = {
+            viewModel.setShowDialogSave(false)
+            viewModel.saveReceiptWithListDet(receipt, listDetailReceipt)
+        },
         onDismissMenuPaymentMethod = { viewModel.setIsOpenMenuPaymentMethod(false) },
         onActionInteraction = { viewModel.setIsOpenMenuPaymentMethod(true) },
         onSelectedItemMenuPaymentMethod = {
@@ -128,7 +139,7 @@ fun ReceiptScreen(
                 listFocus.last().requestFocus()
             }
         },
-        onClickSave = viewModel::saveReceiptWithListDet,
+        onClickSave = viewModel::onClickButtonSaveReceipt,
         showLoading = showLoading
     )
 }
@@ -143,8 +154,11 @@ fun ReceiptScreen(
     listFocus: SnapshotStateList<FocusRequester>,
     idReceiptToNavigate: Int,
     showLoading: Boolean,
+    showDialogSave: Boolean,
     isOpenMenuPaymentMethod: Boolean,
     totalReceipt: Double,
+    dialogSaveDismiss: () -> Unit,
+    dialogSaveConfirmButton: () -> Unit,
     onDismissMenuPaymentMethod: () -> Unit,
     onActionInteraction: () -> Unit,
     onSelectedItemMenuPaymentMethod: (String) -> Unit,
@@ -302,6 +316,30 @@ fun ReceiptScreen(
         SimpleLoading()
     }
 
+    AnimatedVisibility(visible = showDialogSave) {
+        AlertDialog(
+            title = {
+                Text(text = stringResource(R.string.title_dialog_save_receipt))
+            },
+            text = {
+                Text(text = stringResource(R.string.desc_dialog_save_receipt))
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = dialogSaveConfirmButton,
+                    content = { Text(text = stringResource(dR.string.accept)) }
+                )
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = dialogSaveDismiss,
+                    content = { Text(text = stringResource(dR.string.cancel)) }
+                )
+            },
+            onDismissRequest = dialogSaveDismiss
+        )
+    }
+
     DisposableEffect(idReceiptToNavigate) {
         if (idReceiptToNavigate != -1) onActionDisposableEffect()
         onDispose { }
@@ -336,7 +374,10 @@ fun PreviewReceiptScreen(
             onLockedItemChanged = {},
             onClickFAB = {},
             onClickSave = { _, _ -> },
-            onValueChangeTitle = { _ -> }
+            onValueChangeTitle = { _ -> },
+            showDialogSave = false,
+            dialogSaveDismiss = {},
+            dialogSaveConfirmButton = {}
         )
     }
 }

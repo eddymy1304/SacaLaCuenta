@@ -73,10 +73,7 @@ fun SacaLaCuentaMain(
             },
             bottomBar = {
 
-                val items = listOf(
-                    RECEIPT,
-                    HISTORY
-                )
+                val items = listOf(RECEIPT, HISTORY)
 
                 AnimatedVisibility(visible = showBottomNav) {
                     AppBottomBar(
